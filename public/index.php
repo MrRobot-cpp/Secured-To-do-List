@@ -9,7 +9,7 @@ require_once 'Controller/TaskController.php';
 
 // Create a database connection.
 $db = (new Database())->getConnection();
-//$userController = new UserController($db);
+$userController = new UserController($db);
 $taskController = new TaskController($db);
 
 // Check if the user is logged in using session data.
