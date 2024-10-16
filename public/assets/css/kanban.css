@@ -1,0 +1,36 @@
+body {
+    background-color: #2f2f2f;
+    color: #f6f6f6;
+    font-family: Arial, sans-serif;
+}
+
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.kanban-column {
+    background-color: #3a3a3a;
+    padding: 15px;
+    border-radius: 5px;
+    flex: 1;
+}
+
+.kanban-card {
+    background-color: #f6f6f6;
+    color: #111111;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.add-task-button {
+    background-color: #ffcb74;
+    color: #111111;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    margin: 20px;
+    border-radius: 5px;
+}
