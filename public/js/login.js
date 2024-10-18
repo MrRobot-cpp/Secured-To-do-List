@@ -1,5 +1,4 @@
 
-
 const contain=document.querySelector(".container"),
 signUp=document.querySelector(".signup-link"),
 login=document.querySelector(".login-link");

@@ -2,6 +2,12 @@
 session_start();
 require_once '../Model/Database.php';
 require_once '../Controller/UserController.php';
+
+$database = new Database();
+$conn = $database->getConnection();
+$controller = new UserController($conn);
+$message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +26,7 @@ require_once '../Controller/UserController.php';
             <div class="form login">
             <span class="title">Login</span>
 
-    <form id="loginpage" action="UserController.php" method="POST">
+    <form id="loginpage" action="../Controller/UserController.php" method="POST">
         <div class="fields">
         <input id="loginemail" type="text" name="email" placeholder="Email" required>
         <i class="fa-regular fa-envelope icon"></i>
@@ -41,7 +47,7 @@ require_once '../Controller/UserController.php';
     </div>
 
     <div class="fields button">
-        <input type="submit" value="Login Now">
+        <input type="submit" value="Login Now" name="login">
     </div>
 
     <div class="login-signup">
@@ -56,7 +62,7 @@ require_once '../Controller/UserController.php';
    <div class="form signup">
     <span class="title">Registration</span>
 
-    <form id="signuppage" action="UserController.php" method="POST">
+    <form id="signuppage"  action="" method="POST">
         <div class="fields">
             <input id="name" type="text" name="name" placeholder="Fullname" required>
             <i class="fa-solid fa-signature icon"></i>
@@ -76,13 +82,13 @@ require_once '../Controller/UserController.php';
             <input type="password" id="confirm" name="confirm_password" placeholder="Confirm password" required>
             <i class="fa-solid fa-lock icon"></i>
         </div>
-        
 
         <div class="fields button">
-            <input type="submit" value="Signup" name="submit" required>
+            <input type="submit" value="Signup" name="signup" required>
         </div>
     </form>
-
+    <?php if (!empty($message)) { echo '<div id="message" style="color:red;">'.$message.'</div>'; } ?>
+    
     <div class="login-signup">
         <span class="text">
             <a href="#" class="text login-link">Back to login</a>
@@ -94,6 +100,16 @@ require_once '../Controller/UserController.php';
 </div>
 
 <script src="../public/js/login.js"></script>
-   
+<script>
+    window.addEventListener('load', function() {
+        if (performance.navigation.type === 1) {
+            const messageDiv = document.getElementById('message');
+            if (messageDiv) {
+                messageDiv.style.display = 'none'; 
+            }
+        }
+    });
+    
+</script>
 </body>
 </html>
