@@ -292,19 +292,22 @@ color: #5e5c5cc7;}
     }
     .sidebar-link i {
       font-size: 100%;
-      margin-left: -17px;
+      margin-left: -20px;
     }
     #sidebar.expand {
       width: 45%;
     }
     button .material-icons-outlined{
       font-size: 100%;
-      margin-left: -17px;
+      margin-left: -20px;
 
     }
     .chart-title{
       font-size: 100%;
 
+    }
+    .table{
+      font-size: 60%;
     }
     
 }
