@@ -82,6 +82,22 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
         </main>
     </div>
 
+    <!-- Task Form -->
+    <div id="task-form" style="display: none;">
+        <form action="../Controller/TaskController.php" method="POST">
+            <input type="text" name="title" placeholder="Task Title" required>
+            <textarea name="description" placeholder="Task Description"></textarea>
+            <select name="priority">
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="normal">Normal</option>
+            </select>
+            <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+            <button type="submit" name="add_task">Add Task</button>
+            <button type="button" id="task-form-cancel">Cancel</button>
+        </form>
+    </div>
+
     <script src="../public/js/kanban.js"></script>
 </body>
 </html>

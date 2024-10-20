@@ -59,15 +59,20 @@ class UserController {
         }
     }
     
+    public function getUserById($userId) {
+        return $this->userModel->getUserById($userId);
+    }
 
     private function startSession($user) {
-        $_SESSION["id"] = $user["id"];
+        session_start();
+        $_SESSION["user_id"] = $user["id"];
         $_SESSION["name"] = $user["name"];
         $_SESSION["email"] = $user["email"];
         header("Location: ../view/kanban.php?Login=success"); 
         exit();
     }
 }
+
 
 if ($conn) {
     $controller = new UserController($conn);

@@ -65,7 +65,7 @@ body {
 }
 
 .kanban-columns {
-    display: flex;
+    display: block;
     gap: 20px;
 }
 
@@ -74,6 +74,7 @@ body {
     padding: 10px;
     border-radius: 8px;
     width: 30%;
+    margin-bottom: 20px;
     box-sizing: border-box;
     color: #111111;
 }
@@ -104,4 +105,56 @@ body {
 
 .new-task:hover {
     background-color: #d9a856;
+}
+#task-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2f2f2f;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    z-index: 100;
+    color: #f6f6f6;
+}
+
+#task-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+#task-form input[type="text"],
+#task-form textarea,
+#task-form select {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    background-color: #f6f6f6;
+    color: #2f2f2f;
+    font-size: 16px;
+}
+
+#task-form button {
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+#task-form button[type="submit"] {
+    background-color: #ffcb74;
+    color: #111111;
+    margin-bottom: 10px;
+}
+
+#task-form button[type="button"] {
+    background-color: #555;
+    color: #f6f6f6;
+}
+
+#task-form button[type="button"]:hover {
+    background-color: #777;
 }
