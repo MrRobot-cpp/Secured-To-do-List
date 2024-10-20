@@ -1,15 +1,27 @@
 <?php
+// Start the session and include necessary files.
 session_start();
 require_once '../Model/Database.php';
 require_once '../Controller/TaskController.php';
+require_once '../Controller/UserController.php';
 
-// Create database connection
+// Ensure the user is logged in.
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Create a new database connection and controllers.
 $db = (new Database())->getConnection();
+$userController = new UserController($db);
 $taskController = new TaskController($db);
 
-// Fetch tasks for the logged-in user
-$userId = $_SESSION['user_id']; // Assuming user ID is stored in session
-$tasks = $taskController->showTasks($userId);
+// Retrieve user data.
+$user = $userController->getUserById($_SESSION['user_id']);
+$name = $user['name'] ?? 'User';
+
+// Retrieve all tasks for the user.
+$tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -21,54 +33,55 @@ $tasks = $taskController->showTasks($userId);
     <link rel="stylesheet" href="../public/assets/css/kanban.css">
 </head>
 <body>
-    <div class="kanban-board">
-        <div class="kanban-column" data-status="to_do">
-            <h2>To Do</h2>
-            <?php foreach ($tasks as $task): ?>
-                <?php if ($task['status'] === 'to_do'): ?>
-                    <div class="kanban-card">
-                        <h3><?php echo htmlspecialchars($task['title']); ?></h3>
-                        <p><?php echo htmlspecialchars($task['description']); ?></p>
-                        <p>Category: <?php echo htmlspecialchars($task['category_name']); ?></p>
-                        <p>Priority: <?php echo htmlspecialchars($task['priority']); ?></p>
-                        <p>Deadline: <?php echo htmlspecialchars($task['deadline']); ?></p>
-                        <button class="move-to" data-task-id="<?php echo $task['id']; ?>" data-status="in_progress">Move to In Progress</button>
-                        <button class="delete-task" data-task-id="<?php echo $task['id']; ?>">Delete</button>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="kanban-column" data-status="in_progress">
-            <h2>In Progress</h2>
-            <?php foreach ($tasks as $task): ?>
-                <?php if ($task['status'] === 'in_progress'): ?>
-                    <div class="kanban-card">
-                        <h3><?php echo htmlspecialchars($task['title']); ?></h3>
-                        <p><?php echo htmlspecialchars($task['description']); ?></p>
-                        <!-- Similar details as above -->
-                        <button class="move-to" data-task-id="<?php echo $task['id']; ?>" data-status="done">Move to Done</button>
-                        <button class="delete-task" data-task-id="<?php echo $task['id']; ?>">Delete</button>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="kanban-column" data-status="done">
-            <h2>Done</h2>
-            <?php foreach ($tasks as $task): ?>
-                <?php if ($task['status'] === 'done'): ?>
-                    <div class="kanban-card">
-                        <h3><?php echo htmlspecialchars($task['title']); ?></h3>
-                        <p><?php echo htmlspecialchars($task['description']); ?></p>
-                        <!-- Similar details as above -->
-                        <button class="delete-task" data-task-id="<?php echo $task['id']; ?>">Delete</button>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
+    <div class="container">
+        <!-- Vertical Navbar -->
+        <aside class="navbar">
+            <h2>Welcome, <?php echo htmlspecialchars($name); ?></h2>
+            <ul>
+                <li><a href="kanban.php" class="active">Home</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="kanban-board">
+            <div class="search-filter">
+                <input type="text" id="search-bar" placeholder="Search tasks...">
+                <div class="filter-group">
+                    <label for="priority-filter">Priority:</label>
+                    <select id="priority-filter">
+                        <option value="all">All</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="high">High</option>
+                        <option value="normal">Normal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="kanban-columns">
+                <?php 
+                // Define columns based on priorities.
+                $priorities = ['urgent' => 'Urgent', 'high' => 'High', 'normal' => 'Normal'];
+
+                foreach ($priorities as $priority_key => $priority_name) {
+                    echo "<div class='kanban-column' data-priority='$priority_key'>";
+                    echo "<h2>$priority_name</h2>";
+
+                    foreach ($tasks as $task) {
+                        if ($task['priority'] === $priority_key) {
+                            echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='$priority_key'>";
+                            echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
+                            echo "<p>" . htmlspecialchars($task['description']) . "</p>";
+                            echo "</div>";
+                        }
+                    }
+                    echo "<div class='new-task'>+ New Task</div>";
+                    echo "</div>";
+                }
+                ?>
+            </div>
+        </main>
     </div>
 
-    <button class="add-task-button">Add New Task</button>
-
-    <script src="assets/js/kanban.js"></script>
+    <script src="../public/js/kanban.js"></script>
 </body>
 </html>

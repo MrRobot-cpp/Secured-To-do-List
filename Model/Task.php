@@ -9,7 +9,8 @@ class Task {
 
     // Create a new task
     public function createTask($userId, $title, $description, $categoryId, $priority, $deadline) {
-        $sql = "INSERT INTO {$this->table} (user_id, title, description, category_id, priority, deadline) VALUES (:user_id, :title, :description, :category_id, :priority, :deadline)";
+        $sql = "INSERT INTO {$this->table} (user_id, title, description, category_id, priority, deadline) 
+                VALUES (:user_id, :title, :description, :category_id, :priority, :deadline)";
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindParam(':user_id', $userId);
@@ -32,7 +33,7 @@ class Task {
                 deadline = :deadline 
                 WHERE id = :taskId";
         $stmt = $this->conn->prepare($sql);
-    
+
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':category_id', $categoryId);
@@ -40,16 +41,16 @@ class Task {
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':deadline', $deadline);
         $stmt->bindParam(':taskId', $taskId);
-    
+
         return $stmt->execute();
     }
-    
+
     public function updateTaskStatus($taskId, $status) {
         $sql = "UPDATE tasks SET status = :status WHERE id = :taskId";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':taskId', $taskId);
-    
+
         return $stmt->execute();
     }
 
@@ -61,15 +62,15 @@ class Task {
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':user_id', $userId);
         $stmt->execute();
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     public function deleteTask($taskId) {
         $sql = "DELETE FROM tasks WHERE id = :taskId";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':taskId', $taskId);
-    
+
         return $stmt->execute();
     }
 }

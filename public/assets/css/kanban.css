@@ -1,36 +1,107 @@
 body {
+    margin: 0;
+    font-family: Arial, sans-serif;
     background-color: #2f2f2f;
     color: #f6f6f6;
-    font-family: Arial, sans-serif;
 }
 
-.kanban-board {
+.container {
     display: flex;
-    gap: 20px;
+}
+
+/* Vertical Navbar */
+.navbar {
+    background-color: #111111;
+    padding: 20px;
+    width: 200px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.navbar h2 {
+    color: #ffcb74;
+    margin-bottom: 20px;
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.navbar a {
+    color: #f6f6f6;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    background-color: #2f2f2f;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    background-color: #ffcb74;
+    color: #111111;
+}
+
+/* Kanban Board */
+.kanban-board {
+    flex: 1;
     padding: 20px;
 }
 
-.kanban-column {
-    background-color: #3a3a3a;
-    padding: 15px;
-    border-radius: 5px;
-    flex: 1;
+.search-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.kanban-card {
-    background-color: #f6f6f6;
-    color: #111111;
+.search-filter input, .search-filter select {
     padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none;
 }
 
-.add-task-button {
+.kanban-columns {
+    display: flex;
+    gap: 20px;
+}
+
+.kanban-column {
+    background-color: #f6f6f6;
+    padding: 10px;
+    border-radius: 8px;
+    width: 30%;
+    box-sizing: border-box;
+    color: #111111;
+}
+
+.kanban-column h2 {
+    margin-top: 0;
+    color: #2f2f2f;
+    border-bottom: 2px solid;
+    padding-bottom: 10px;
+}
+
+.task {
     background-color: #ffcb74;
     color: #111111;
     padding: 10px;
-    border: none;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.new-task {
+    background-color: #ffcb74;
+    color: #111111;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
     cursor: pointer;
-    margin: 20px;
-    border-radius: 5px;
+}
+
+.new-task:hover {
+    background-color: #d9a856;
 }

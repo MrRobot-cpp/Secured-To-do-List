@@ -24,8 +24,17 @@ class TaskController {
         return $this->taskModel->updateTaskStatus($taskId, $status);
     }
 
+    // Update a task (full update)
+    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline) {
+        return $this->taskModel->updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline);
+    }
+
     // Delete a task
     public function deleteTask($taskId) {
         return $this->taskModel->deleteTask($taskId);
+    }
+
+    public function getAllTasksByUser($userId) {
+        return $this->taskModel->getTasksByUserId($userId);
     }
 }
