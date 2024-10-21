@@ -65,7 +65,7 @@ body {
 }
 
 .kanban-columns {
-    display: block;
+    display: flex;
     gap: 20px;
 }
 
