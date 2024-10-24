@@ -57,20 +57,44 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('user_id', userId);  // Use the userId variable defined in HTML
             formData.append('status', columnElement.getAttribute('data-priority'));
 
-            fetch('Controller/TaskController.php', {
+            fetch('../Controller/TaskController.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Failed to add task: ' + data.message);
+            .then(response => response.text())  // Get the response as plain text first
+            .then(text => {
+                console.log('Raw response:', text);  // Log the raw response
+            
+                // Now attempt to parse it as JSON if it's valid JSON
+                try {
+                    const data = JSON.parse(text);  // Parse the text as JSON
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to add task: ' + data.message);
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
                 }
             })
-            .catch(error => console.error('Error:', error));
-        });
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+            
+        //     fetch('Controller/TaskController.php', {
+        //         method: 'POST',
+        //         body: formData
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.success) {
+        //             location.reload();
+        //         } else {
+        //             alert('Failed to add task: ' + data.message);
+        //         }
+        //     })
+        //     .catch(error => console.error('Error:', error));
+        // });
 
         form.querySelector('.cancel-btn').addEventListener('click', function() {
             form.remove();
