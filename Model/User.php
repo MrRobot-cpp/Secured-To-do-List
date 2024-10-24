@@ -57,5 +57,22 @@ class User {
     
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function get_id( $email) {
+    try {
+    
+        $query = "SELECT id FROM USERS WHERE email = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$email,$password]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        
+        
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return null;
+    }
+}
+
 }
 ?>
