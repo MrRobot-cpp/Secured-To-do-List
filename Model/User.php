@@ -70,14 +70,25 @@ class User {
     
         return $stmt->execute();
     }
-    public function get_id( $email) {
+   public function get_id( $email) {
     try {
-   
-       $query = "SELECT id FROM USERS WHERE email = ?";
-       $stmt = $this->conn->prepare($query);
-      $stmt->execute([$email,$password]);
+    
+        $query = "SELECT id FROM users WHERE email = :email ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email',$email);
+        $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return  $stmt->fetch(PDO::FETCH_COLUMN);
+
+        
+        
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return null;
+    }
+}
+
+
 
         
         
