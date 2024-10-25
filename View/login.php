@@ -6,7 +6,10 @@ require_once '../Controller/UserController.php';
 $database = new Database();
 $conn = $database->getConnection();
 $controller = new UserController($conn);
-$message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
+$login_message = isset($_SESSION['login_message']) ? $_SESSION['login_message'] : '';
+$signup_message = isset($_SESSION['signup_message']) ? $_SESSION['signup_message'] : '';
+unset($_SESSION['login_message']);
+unset($_SESSION['signup_message']);
 
 ?>
 <!DOCTYPE html>
@@ -43,7 +46,7 @@ $message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
             <label for="logCheck" class="text">Remember me</label>
         </div>
 
-        <a href="#" class="text">Forgot password?</a>
+        <a href="reset_pass.php" class="text">Forgot password?</a>
     </div>
 
     <div class="fields button">
@@ -56,13 +59,15 @@ $message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
         </span>
     </div>
 </form>
+<?php if (!empty($login_message)) { echo '<div id="message" style="color:red;">'.$login_message.'</div>'; } ?>
    </div>
-
+<!--  -->
+   
 <!-- Registration Form -->
-   <div class="form signup">
+   <div class="form signup" >
     <span class="title">Registration</span>
 
-    <form id="signuppage"  action="" method="POST">
+    <form id="signuppage" action="../Controller/UserController.php" method="POST">
         <div class="fields">
             <input id="name" type="text" name="name" placeholder="Fullname" required>
             <i class="fa-solid fa-signature icon"></i>
@@ -87,7 +92,7 @@ $message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
             <input type="submit" value="Signup" name="signup" required>
         </div>
     </form>
-    <?php if (!empty($message)) { echo '<div id="message" style="color:red;">'.$message.'</div>'; } ?>
+    <?php if (!empty($signup_message)) { echo '<div id="message" style="color:red;">'.$signup_message.'</div>'; } ?>
     
     <div class="login-signup">
         <span class="text">
@@ -108,7 +113,26 @@ $message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
                 messageDiv.style.display = 'none'; 
             }
         }
+        const formElements = document.querySelectorAll('#signuppage input');
+    formElements.forEach(element => {
+        element.addEventListener('input', function() {
+            const messageDiv = document.getElementById('message');
+            if (messageDiv) {
+                messageDiv.style.display = 'none'; 
+            }
+        });
     });
+    const elements = document.querySelectorAll('#loginpage input');
+    elements.forEach(element => {
+        element.addEventListener('input', function() {
+            const messageDiv = document.getElementById('message');
+            if (messageDiv) {
+                messageDiv.style.display = 'none'; 
+            }
+        });
+    });
+    });
+    
     
 </script>
 </body>
