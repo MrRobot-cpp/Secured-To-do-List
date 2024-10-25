@@ -43,8 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once '../Model/Database.php';
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
-
-    $userId = $_POST['user_id'] ?? 0;
+    
+    $userId =$user->get_id([$email] );
+   // $userId = $_POST['user_id'] ?? 0;
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $priority = $_POST['priority'] ?? 'normal';

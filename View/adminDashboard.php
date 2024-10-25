@@ -1,4 +1,43 @@
+<?php
+// Start the session and include necessary files.
+session_start();
+require_once '../Model/Database.php';
+require_once '../Controller/TaskController.php';
+require_once '../Controller/UserController.php';
 
+// Ensure the user is logged in.
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Create a new database connection and controllers.
+$db = (new Database())->getConnection();
+$userController = new UserController($db);
+$taskController = new TaskController($db);
+
+
+// Retrieve user data, including the usertypes_id.
+$user = $userController->getUserById($_SESSION['user_id']);
+$name = $user['name'] ?? 'User';
+$usertypes_id = $user['usertypes_id'] ?? null;  // Fetch usertypes_id
+
+// Check if usertypes_id is 1 (admin), otherwise redirect to kanban.php.
+if ($usertypes_id != 1) {
+    header("Location: kanban.php");
+    exit();
+}
+
+// Retrieve all tasks for the user.
+$tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
+//    STARTT    //
+if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    session_unset();  // Unset all session variables
+    session_destroy();  // Destroy the session
+    header("Location: login.php");  // Redirect to the login page
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -58,7 +97,7 @@
               
             </ul>
             <div class="sidebar-footer">
-                <a href="#" class="sidebar-link">
+                <a href="?action=logout" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>

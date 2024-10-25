@@ -19,6 +19,14 @@ $taskController = new TaskController($db);
 // Retrieve user data.
 $user = $userController->getUserById($_SESSION['user_id']);
 $name = $user['name'] ?? 'User';
+$usertypes_id = $user['usertypes_id'] ?? null;  // Fetch usertypes_id
+
+// Check if usertypes_id is 1 (admin), otherwise redirect to kanban.php.
+if ($usertypes_id != 2) {
+    header("Location: adminDashboard.php");
+    exit();
+}
+
 
 // Retrieve all tasks for the user.
 $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);

@@ -8,15 +8,16 @@ class Task {
     }
 
     // Create a new task
-    public function createTask($userId, $title, $description, $categoryId, $priority, $deadline) {
-        $sql = "INSERT INTO {$this->table} (user_id, title, description, category_id, priority, deadline) 
-                VALUES (:user_id, :title, :description, :category_id, :priority, :deadline)";
+    public function createTask($userId, $title, $description, $categoryId,$status, $priority, $deadline) {
+        $sql = "INSERT INTO {$this->table} (user_id, title, description, category_id,status, priority, deadline) 
+                VALUES (:user_id, :title, :description, :category_id,:status, :priority, :deadline)";
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindParam(':user_id', $userId);
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':category_id', $categoryId);
+        $stmt->bindParam(':status',$status);
         $stmt->bindParam(':priority', $priority);
         $stmt->bindParam(':deadline', $deadline);
 
