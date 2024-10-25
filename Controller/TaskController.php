@@ -1,5 +1,6 @@
 <?php
 require_once '../Model/Task.php';
+require_once 'UserController.php';
 
 class TaskController {
     private $taskModel;
