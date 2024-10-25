@@ -1,0 +1,103 @@
+body {
+    height: 100vh; 
+    margin: 0;
+    display: flex;
+    align-items: center;  
+    justify-content: center;  
+    background-color: #2f2f2f; 
+}
+
+.container {
+    position: relative;
+    max-width: 100%;
+    width: 400px; /* Adjust width as needed */
+    background: #fff; /* Background for the form */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+    overflow: hidden;
+    padding: 20px; /* Padding inside the container */
+    display: flex;
+    flex-direction: column; /* Column layout */
+    align-items: center; /* Center align items */
+    justify-content: center; /* Center items vertically */
+}
+
+.form .title {
+    font-size: 35px;
+    font-weight: 600;
+    color: black; 
+
+}
+
+.fields {
+    position: relative; 
+    width: 100%; 
+    margin-bottom: 20px; 
+    left:-40px;
+    margin-top: 20px;
+}
+
+.fields input {
+    height: 50px; 
+    width: 100%; 
+    padding: 0 35px; 
+    border: none; 
+    outline: none;
+    font-size: 16px; 
+    background-color: #f6f6f6; 
+    color: #111111; 
+    border-bottom: 2px solid #ccc; 
+    border-top: 2px solid transparent; 
+
+}
+
+.fields input:is(:focus, :valid) {
+    border-bottom-color: #ffcb74;
+}
+.fields input:is(:focus, :valid)~i{
+    color: #ffcb74;
+}
+.fields i {
+    position: absolute; 
+    top: 50%; 
+    left: 10px; 
+    transform: translateY(-50%); 
+    color: #ccc;
+    font-size: 15px;
+}
+/* BUTTON */
+.fields.button input {
+    border: none; 
+    color: #fff; 
+    font-size: 17px; 
+    font-weight: 500; 
+    border-radius: 8px;
+    background-color: #ffcb74; 
+    cursor: pointer; 
+    height: 50px; 
+    
+}
+
+.fields.button input:hover {
+    background-color: #e6a864; 
+}
+
+.login-signup {
+    margin-top: 30px; 
+    text-align: center; 
+}
+
+.form a.text {
+    color: #ffcb74; 
+    text-decoration: none;
+}
+
+.form a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+    .container {
+        width: 90%; 
+    }
+}

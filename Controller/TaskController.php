@@ -36,15 +36,39 @@ class TaskController {
     public function getAllTasksByUser($userId) {
         return $this->taskModel->getTasksByUserId($userId);
     }
-}
+    public function getAllTasks() {
+        return $this->taskModel->getAllTasks(); // Call the new method
+    }
+    public function getTaskCountByStatus($status) {
+        return $this->taskModel->getTaskCountByStatus($status);
+    }
 
+    
+    public function completionPercentage($totalTasks, $completedTasks) {
+        if ($totalTasks === 0) {
+            return 0; // Avoid division by zero
+        }
+        return ($completedTasks / $totalTasks) * 100;
+    }
+    public function getTopFiveUsers() {
+        return $this->taskModel->getTopFiveUsersByTasks();
+    }
+    public function getTaskCountsByUser($userId) {
+        return $this->taskModel->getTaskCountsByUser($userId);
+    }
+
+
+
+
+}  
 // Handle the POST request for task creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once '../Model/Database.php';
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
-
-    $userId = $_POST['user_id'] ?? 0;
+    
+    $userId =$user->get_id([$email] );
+   // $userId = $_POST['user_id'] ?? 0;
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $priority = $_POST['priority'] ?? 'normal';

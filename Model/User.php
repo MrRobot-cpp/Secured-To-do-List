@@ -37,15 +37,16 @@ class User {
         return $stmt->rowCount() > 0;
     }
 
-    public function registerUser($fullName, $email, $password) {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (name, email, Password) VALUES (:fullname, :email, :password)";
+    public function registerUser($fullName, $email, $password, $userType) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users (name, email, password, user_type) VALUES (:name, :email, :password, :user_type)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':fullname', $fullName);
+        $stmt->bindParam(':name', $fullName);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hash);
-
-        return $stmt->execute(); 
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':user_type', $userType);
+        
+        return $stmt->execute();
     }
 
 
@@ -57,5 +58,40 @@ class User {
     
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
+
+    ////////////////reseet password
+    public function updatePassword($email, $newPassword) {
+        $query = "UPDATE users SET password = :password WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':password', $newPassword);
+        $stmt->bindParam(':email', $email);
+    
+        return $stmt->execute();
+    }
+    public function get_id( $email) {
+    try {
+   
+       $query = "SELECT id FROM USERS WHERE email = ?";
+       $stmt = $this->conn->prepare($query);
+      $stmt->execute([$email,$password]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        
+        
+   } catch (PDOException $e) {
+       echo "Error: " . $e->getMessage();
+        return null;
+    }
+}
+public function getAllUsers() {
+    $query = "SELECT * FROM users WHERE usertypes_id = 2";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
 ?>
