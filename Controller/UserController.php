@@ -75,6 +75,9 @@ class UserController {
     public function getUserById($userId) {
         return $this->userModel->getUserById($userId);
     }
+        public function get_id($email){
+return $this->userModel->get_id($email);
+    }
     public function getAllUsers() {
         return $this->userModel->getAllUsers(); // Call the new method
     }
