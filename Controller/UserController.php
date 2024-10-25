@@ -75,6 +75,10 @@ class UserController {
     public function getUserById($userId) {
         return $this->userModel->getUserById($userId);
     }
+    public function getAllUsers() {
+        return $this->userModel->getAllUsers(); // Call the new method
+    }
+
 
     private function startSession($user) {
         session_start();
