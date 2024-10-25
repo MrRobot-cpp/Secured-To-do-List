@@ -63,12 +63,14 @@ class TaskController {
 }  
 // Handle the POST request for task creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_start();
     require_once '../Model/Database.php';
+    require_once '../Controller/UserController.php';
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
     
-    $userId =$user->get_id([$email] );
-   // $userId = $_POST['user_id'] ?? 0;
+$userId =$user->get_id($_SESSION["email"]);
+    // $userId = $_POST['user_id'] ?? 0;
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $priority = $_POST['priority'] ?? 'normal';
