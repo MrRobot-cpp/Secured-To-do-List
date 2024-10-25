@@ -70,22 +70,22 @@ class User {
     
         return $stmt->execute();
     }
- //   public function get_id( $email) {
- //   try {
- //   
- //       $query = "SELECT id FROM USERS WHERE email = ?";
- //       $stmt = $this->conn->prepare($query);
- //       $stmt->execute([$email,$password]);
+    public function get_id( $email) {
+    try {
+   
+       $query = "SELECT id FROM USERS WHERE email = ?";
+       $stmt = $this->conn->prepare($query);
+      $stmt->execute([$email,$password]);
 
-  //      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         
         
-  //  } catch (PDOException $e) {
-   //     echo "Error: " . $e->getMessage();
-    //    return null;
-    //}
-//}
+   } catch (PDOException $e) {
+       echo "Error: " . $e->getMessage();
+        return null;
+    }
+}
 public function getAllUsers() {
     $query = "SELECT * FROM users WHERE usertypes_id = 2";
     $stmt = $this->conn->prepare($query);
