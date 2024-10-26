@@ -1,0 +1,167 @@
+body{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* aligns all content in the center of the page */
+    background-color: #2f2f2f; /* modified background color */
+}
+.container{
+    position: relative;
+    max-width: 100%;
+    width: 50%;
+    background: #fff;
+    border-radius: 10px; /* curves of the border of the container */
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    align-items: center;
+}
+.container .form-details{
+    max-width: 250px;
+    height: 100%;
+    color: #fff;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: url("https://i.pinimg.com/originals/54/78/63/5478639e6d3dde6fe3db9079f430b993.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.container .forms{
+    display: flex;
+    align-items: center;
+    height: 400px;
+    width: 100%;
+    transition: height 0.2s ease;
+}
+.container .login {
+    margin-left: 0; 
+    opacity: 1; 
+}
+.container .form{
+    width: 50%;
+    padding: 10px;
+    background-color: #fff;
+    transition: margin-left 0.18s ease, opacity 0.2s ease;
+}
+
+.container.active .login{
+    margin-left: -100%;
+    opacity: 0;
+    transition: margin-left 0.18s ease, opacity 0.15s ease;
+}
+
+.container .signup{
+    margin-left: -100%;
+    opacity: 0;
+}
+.container.active .signup{ 
+    margin-left: 50%;
+    opacity: 1;
+    transition: margin-left 0.18s ease, opacity 0.2s ease;
+}
+.container.active .forms{
+    height: 600px;
+}
+.form .title{
+    position: relative; /* without impacting the other elements' layout */
+    font-size: 35px;
+    font-weight: 600;
+}
+.form .fields{
+    position: relative;
+    height: 50px;
+    width: 100%;
+    margin-top: 30px;   
+}
+.fields input{
+    position: absolute;
+    height: 100%;
+    width: 80%;
+    padding: 0 35px;
+    border: none; /* removing the borders of the field boxes */
+    outline: none;
+    font-size: 16px;
+    background-color: #f6f6f6; /* updated input field color */
+    color: #111111; /* updated label color */
+    border-bottom: 2px solid #ccc; /* fields underline */
+    border-top: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+.fields input:is(:focus, :valid){
+    border-bottom-color: #ffcb74; /* updated focus color */
+}
+.form .checkbox-field{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* items are distributed along the main axis with the first item aligning to the start edge and the last item aligned to the end edge */
+    margin-top: 20px;
+    padding: 2px 10px 0px 4px;
+}
+.checkbox-field .checkbox-content{
+    display: flex;
+    align-items: center;
+}
+.checkbox-content input{
+    margin: 0 8px -2px 4px; /* spaces around the checkbox */
+    accent-color: #ffcb74; /* updated checkbox color */
+}
+.login-signup{
+    margin-top: 30px;
+    text-align: center;
+}
+.form a.text{
+    color: #ffcb74; /* updated link color */
+    text-decoration: none;
+}
+.form a:hover{
+    text-decoration: underline;
+}
+.form .button input{
+    border: none;
+    color: #f6f6f6; /* updated text color */
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 1px; /* spaces between the letters */
+    border-radius: 8px;
+    background-color: #ffcb74; /* updated button background color */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 25px;
+}
+.button input:hover{
+    background-color: #e6a864;
+    margin-left: 20px;
+}
+.fields i{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%); /* moving the icons a little down */
+    color: #ccc;
+    font-size: 17px;
+}
+.fields input:is(:focus, :valid)~i{
+    color: #ffcb74; /* updated icon focus color */
+}
+.row {
+    font-size: 14px;
+    font-weight: 60;
+    margin-top: 20px;
+    margin-left: 40px;
+    color: #f6f6f6; /* updated text color for small elements */
+}
+@media (max-width:800px){
+    .container{
+        width: 90%;
+    }
+    .forms .form-details{
+        width: 30%;
+    }
+    .forms .form{
+        padding: 30px 20px;
+        flex-wrap: wrap;
+    }
+}
