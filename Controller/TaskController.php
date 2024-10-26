@@ -69,7 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once '../Controller/UserController.php';
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
-    
+    $user=new UserController($db);
+
+
 $userId =$user->get_id($_SESSION["email"]);
     // $userId = $_POST['user_id'] ?? 0;
     $title = $_POST['title'] ?? '';

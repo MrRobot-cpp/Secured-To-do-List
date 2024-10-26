@@ -77,12 +77,6 @@ class User {
             $stmt->execute();
 
             return  $stmt->fetch(PDO::FETCH_COLUMN);
-
-
-
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return null;
         } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
             return null;
