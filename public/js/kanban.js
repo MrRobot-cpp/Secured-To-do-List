@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const priorityFilter = document.getElementById('priority-filter');
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
         //         }
         //     })
         //     .catch(error => console.error('Error:', error));
-        // });
+         });
 
         form.querySelector('.cancel-btn').addEventListener('click', function() {
             form.remove();

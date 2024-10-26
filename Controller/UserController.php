@@ -20,7 +20,7 @@ class UserController {
             $user = $this->userModel->verifyUser($email, $password);
             if ($user) {
                 $this->startSession($user);
-                if ($user['user_type'] === 'admin') {
+                if ($user['usertypes_id'] === 1) { 
                     header("Location: ../view/adminDashboard.php?Login=success"); 
                 } else {
                     header("Location: ../view/kanban.php?Login=success"); 
@@ -31,8 +31,6 @@ class UserController {
                 header("Location: ../view/login.php"); 
                 exit();
             }
-           
-        
         }
     }
 
@@ -43,13 +41,12 @@ class UserController {
             $email = htmlspecialchars($_POST["email"]);
             $password = htmlspecialchars($_POST["password"]);
             $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
-            $userType = 'client';
+            $userType = 2; 
             if (strlen($password) < 4) {
                 $_SESSION['signup_message'] = "Password must be at least 4 characters long.";
-            }
-            if (!$this->userModel->usernameExists($fullName) && !$this->userModel->emailExists($email)) {
+            } else if (!$this->userModel->usernameExists($fullName) && !$this->userModel->emailExists($email)) {
                 if ($password === $confirmPassword) {
-                    if ($this->userModel->registerUser($fullName, $email, $password, $userType)) {
+                    if ($this->userModel->registerUser($fullName, $email, password_hash($password, PASSWORD_DEFAULT), $userType)) {
                         $_SESSION['signup_message'] = "Registration successful!";
                     } else {
                         $_SESSION['signup_message'] = "Error: Unable to register user.";
@@ -66,27 +63,12 @@ class UserController {
                 }
             }
             header("Location: ../view/login.php"); 
-        exit();
+            exit();
         }
-      
-    }
-    
-    
-    public function getUserById($userId) {
-        return $this->userModel->getUserById($userId);
     }
 
-    private function startSession($user) {
-        session_start();
-        $_SESSION["user_id"] = $user["id"];
-        $_SESSION["name"] = $user["name"];
-        $_SESSION["email"] = $user["email"];
-        $_SESSION["user_type"] = $user["user_type"]; 
-    }
-
-
-   
     public function resetPassword() {
+        session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             $email = filter_var($_POST['reset_email'], FILTER_SANITIZE_EMAIL); 
             $newPassword = htmlspecialchars($_POST["new_password"]);
@@ -105,13 +87,22 @@ class UserController {
                 $_SESSION['fmessage'] = "Email does not exist.";
             }
         }
-       
         header("Location: ../view/reset_pass.php");
         exit();
     }
-    
-}
 
+    public function getUserById($userId) {
+        return $this->userModel->getUserById($userId);
+    }
+
+    private function startSession($user) {
+        session_start();
+        $_SESSION["user_id"] = $user["id"];
+        $_SESSION["name"] = $user["name"];
+        $_SESSION["email"] = $user["email"];
+        $_SESSION["usertypes_id"] = $user["usertypes_id"];
+    }
+}
 
 if ($conn) {
     $controller = new UserController($conn);
@@ -126,5 +117,4 @@ if ($conn) {
 } else {
     echo "Database connection failed!";
 }
-
 ?>

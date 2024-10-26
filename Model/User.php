@@ -36,19 +36,18 @@ class User {
 
         return $stmt->rowCount() > 0;
     }
-
-    public function registerUser($fullName, $email, $password, $userType) {
+// REGISTER
+    public function registerUser($fullName, $email, $password, $usertypes_id) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (name, email, password, user_type) VALUES (:name, :email, :password, :user_type)";
+        $sql = "INSERT INTO users (name, email, password, usertypes_id) VALUES (:name, :email, :password, :usertypes_id)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':name', $fullName);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':user_type', $userType);
+        $stmt->bindParam(':usertypes_id', $usertypes_id);
         
         return $stmt->execute();
     }
-
 
     public function getUserById($userId) {
         $sql = "SELECT * FROM users WHERE id = :user_id";
@@ -59,9 +58,7 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-
-    ////////////////reseet password
+// RESET PASS
     public function updatePassword($email, $newPassword) {
         $query = "UPDATE users SET password = :password WHERE email = :email";
         $stmt = $this->conn->prepare($query);
@@ -70,22 +67,5 @@ class User {
     
         return $stmt->execute();
     }
-    public function get_id( $email) {
-    try {
-    
-        $query = "SELECT id FROM USERS WHERE email = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([$email,$password]);
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        
-        
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-        return null;
-    }
-}
-
 }
 ?>
