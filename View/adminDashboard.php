@@ -37,6 +37,47 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     header("Location: login.php");  // Redirect to the login page
     exit();
 }
+$tasks = $taskController->getAllTasks();
+$totalTasks = count($tasks);
+$totalUsers = count($userController->getAllUsers());
+
+// Fetch task status counts.
+$toDoCount = $taskController->getTaskCountByStatus('to_do');
+$inProgressCount = $taskController->getTaskCountByStatus('in_progress');
+$doneCount = $taskController->getTaskCountByStatus('done');
+
+$complete=$taskController->completionPercentage($totalTasks, $doneCount);
+$topFiveUsers = $taskController->getTopFiveUsers();
+$userNames = [];
+$taskCounts = [];
+
+foreach ($topFiveUsers as $user) {
+    $userNames[] = $user['name'];
+    $taskCounts[] = $user['task_count'];
+}
+$users = $userController->getAllUsers();
+
+
+
+
+$userNamesJson = json_encode($userNames);
+$taskCountsJson = json_encode($taskCounts);
+// Create an array to hold users with task counts
+$userData = [];
+
+foreach ($users as $userRow) {
+    // Get task counts for each user
+    $taskCounts = $taskController->getTaskCountsByUser($userRow['id']);
+    
+    // Add user and task counts to the array
+    $userData[] = [
+        'name' => $userRow['name'],
+        'done' => $taskCounts['done'],
+
+        'to_do' => $taskCounts['to_do'],
+        'in_progress' => $taskCounts['in_progress']
+    ];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -143,14 +184,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                   
                           <div class="card">
                               <div class="card-inner">
-                                  <h3>204</h3>
+                                  <h3><?php echo $doneCount?></h3>
                                   <span class="material-icons-outlined">assignment_turned_in</span>
 
                               </div>
                               <h1>COMPLETED TASKS</h1>
                               <div class="progress-container">
-                                  <span class="progress" data-value="60%"></span>
-                                  <span class="label">60%</span>
+                                  <span class="progress" data-value="<?php echo $complete?>%"></span>
+                                  <span class="label"><?php echo $complete?>%</span>
                               </div>
                           </div>
                   
@@ -176,7 +217,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                               <div class="charts-card-tasks" id="task">
                                   <h2 class="chart-title">Task Status</h2>
                                   <div id="pie-chart"></div>
-                              </div>
+                                  </div>
                               <div class="charts-card-tasks" id="completion">
                                   <h2 class="chart-title">Task Completion Over Weeks</h2>
                                   <div id="line-chart-tasks"></div>
@@ -185,70 +226,55 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     </div>
 
                  <!--------MANAGE USERS TABLE------->
-                    <h3 class="fw-bold fs-4 my-3"id="manage">Manage Users
-                    </h3>
-                    <div class="row" >
-                        <div class="filter">
-                            <label for="user-status-filter">Filter by status:</label>
-                            <select id="user-status-filter">
-                              <option value="all">All Users</option>
-                              <option value="active">Active</option>
-                              <option value="inactive">Inactive</option>
-                            </select>
-                          </div>
-                          
-                        <div class="col-12">
-                            <table class="table table-striped">
-                                <thead>
+                 <h3 class="fw-bold fs-4 my-3" id="manage">Manage Users</h3>
+<div class="row">
+    <div class="filter">
+        <label for="user-status-filter">Filter by status:</label>
+        <select id="user-status-filter">
+            <option value="all">All Users</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+        </select>
+    </div>
+
+    <div class="col-12">
+    <table class="table table-striped">
+    <thead>
                                     <tr class="highlight">
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
+                                        <th scope="col">Name</th>
+                                        
                                         <th scope="col" colspan="3" class="text-center">Tasks</th>
                                     </tr>
                                     <tr class="highlight">
                                         <th></th>
-                                        <th></th>
+
                                         <th>Complete</th>
                                         <th>Overdue</th>
                                         <th>In Progress</th>
+
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr data-status="inactive">
-                                        <th scope="row">Mark</th>
-                                        <td>Otto</td>
-                                        <td>5</td> 
-                                        <td>2</td> 
-                                        <td>1</td> 
-                                    </tr>
-                                    <tr data-status="inactive">
-                                        <th scope="row">Jacob</th>
-                                        <td>Thornton</td>
-                                        <td>8</td>
-                                        <td>1</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr data-status="inactive">
-                                        <th scope="row">Larry</th>
-                                        <td>Thornton</td>
-                                        <td>3</td>
-                                        <td>0</td>
-                                        <td>4</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                        </div>
-                    </div>
+        <tbody>
+            
+            <?php foreach ($userData as $user): ?>
+                <tr>
+                    <th scope="row"><?php echo htmlspecialchars($user['name']); ?></th>
+
+                    <td class="text-center"><?php echo htmlspecialchars($user['done']); ?></td>
+                    <td class="text-center"><?php echo htmlspecialchars($user['to_do']); ?></td>
+                    <td class="text-center"><?php echo htmlspecialchars($user['in_progress']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
                      <!-----USER ACTIVITY CHARTS----->
                 <h3 class="fw-bold fs-4 my-3"id="active">User Activity
                 </h3>
                 <div class="row" >
                     <div class="charts">
-                        <div class="charts-card" id="activity">
-                            <h2 class="chart-title">Active Users</h2>
-                            <div id="line-chart"></div>
-                        </div>
+                    
                         <div class="charts-card" id="growth">
                             <h2 class="chart-title">User Growth</h2>
                             <div id="bar-chart-growth"></div>
@@ -270,7 +296,266 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    <script src="../public/js/admin.js"></script>
+
+<script>
+
+
+
+
+//PROGRESS BAR
+const bar = document.querySelector(".toggle-btn");
+
+bar.addEventListener("click", function () {
+  document.querySelector("#sidebar").classList.toggle("expand");
+});
+document.querySelectorAll('.progress').forEach(progress => {
+  const value = progress.getAttribute('data-value');
+  const progressBar = document.createElement('div');
+  progressBar.classList.add('progress-bar');
+  progressBar.style.width = value; 
+  progress.appendChild(progressBar);
+});
+
+
+// ---------- CHARTS ----------//
+
+
+//PIE CHART
+ 
+const pieChartOptions = {
+  series: [<?php echo $doneCount?>, <?php echo $inProgressCount?>, <?php echo $toDoCount ?>],
+  chart: {
+    type: 'pie',
+    background: 'transparent',
+    height: 350,
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: ['#2f2f2f', '#ffcb74', '#111111'],
+  labels: ['Completed', 'In Progrss', 'To Do'],
+  legend: {
+    position: 'top',
+    labels: {
+      colors: '#f5f7ff',
+    },
+  },
+  tooltip: {
+    theme: 'dark',
+  },
+};
+
+const pieChart = new ApexCharts(document.querySelector('#pie-chart'), pieChartOptions);
+pieChart.render();
+
+
+//BAR CHART(growth)
+const barChartGrowthOptions = {
+  series: [{
+    name: 'New Users',
+    data: [<?php echo $totalUsers?>, 30, 25, 40, 35, 45, 50]
+  }],
+  chart: {
+    type: 'bar',
+    height: 350,
+    background: 'transparent'
+  },
+  colors: ['#ffcb74'],
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: '50%',
+      borderRadius: 4
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  xaxis: {
+    categories: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+    labels: {
+      style: {
+        colors: '#2f2f2f'
+      }
+    },
+    axisBorder: { color: '#2f2f2f' }
+  },
+  yaxis: {
+    title: {
+      text: 'New Users',
+      style: { color: '#2f2f2f' }
+    },
+    labels: {
+      style: { colors: '#2f2f2f' }
+    }
+  },
+  grid: { borderColor: '#2f2f2f' },
+  legend: {
+    labels: {
+      colors: '#2f2f2f'
+    },
+    show: true,
+    position: 'top'
+  },
+  tooltip: {
+    shared: true,
+    intersect: false,
+    theme: 'dark'
+  }
+};
+
+const barChartGrowth = new ApexCharts(document.querySelector('#bar-chart-growth'), barChartGrowthOptions);
+barChartGrowth.render();
+
+
+
+//BAR CHART(top users)
+const barChartTopUsersOptions = {
+  series: [{
+      name: 'Tasks Created',
+      data: <?php echo $taskCountsJson; ?>
+  }],
+  chart: {
+      type: 'bar',
+      height: 350,
+      background: 'transparent'
+  },
+  colors: ['#2f2f2f', '#ffcb74'],
+  plotOptions: {
+      bar: {
+          distributed: true,
+          borderRadius: 4
+      }
+  },
+  xaxis: {
+      categories: <?php echo $userNamesJson; ?>,
+      labels: {
+          style: {
+              colors: '#2f2f2f'
+          }
+      },
+      axisBorder: { color: '#2f2f2f' }
+  },
+  yaxis: {
+      title: {
+          text: 'Tasks',
+          style: { color: '#2f2f2f' }
+      },
+      labels: {
+          style: { colors: '#2f2f2f' }
+      }
+  },
+  grid: { borderColor: '#2f2f2f' }
+};
+
+const barChartTopUsers = new ApexCharts(document.querySelector('#bar-chart-top-users'), barChartTopUsersOptions);
+barChartTopUsers.render();
+//LINE CHART
+   // Update Line Chart
+   const lineChartTasks = {
+    series: [
+      {
+        name: 'Tasks Completed',
+        data: [<?php echo $doneCount?>, 20, 15, 30, 25, 40, 35], // Use real data for other weeks if available
+      },
+    ],
+    chart: {
+      type: 'line',
+      background: 'transparent',
+      height: 350,
+      toolbar: {
+        show: false,
+      },
+    },
+    colors: ['#ffcb74'],
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 4,
+    },
+    xaxis: {
+      categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'],
+      labels: {
+        style: {
+          colors: '#2f2f2f',
+        },
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'Tasks Completed',
+        style: {
+          color: '#2f2f2f',
+        },
+      },
+      labels: {
+        style: {
+          colors: '#2f2f2f',
+        },
+      },
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      theme: 'dark',
+    },
+  };
+
+  const lineTasks = new ApexCharts(document.querySelector('#line-chart-tasks'), lineChartTasks);
+  lineTasks.render();
+//USER STATUS
+document.getElementById('user-status-filter').addEventListener('change', function() {
+  const selectedStatus = this.value;
+  const rows = document.querySelectorAll('tbody tr');
+  
+  rows.forEach(row => {
+    if (selectedStatus === 'all' || row.getAttribute('data-status') === selectedStatus) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+document.addEventListener("DOMContentLoaded", function() {
+    // Fetch users on page load
+    fetchUsers();
+
+    // Add event listener for the filter
+    document.getElementById("user-status-filter").addEventListener("change", function() {
+        fetchUsers(this.value);
+    });
+
+    function fetchUsers(status = 'all') {
+        fetch('manage_users.php') // This is where manage_users.php should be hosted
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector("table tbody");
+                tableBody.innerHTML = ''; // Clear table before inserting new rows
+
+                data.forEach(user => {
+                    // Apply filter based on user status
+                    if (status === 'all' || user.status === status) {
+                        const row = `
+                            <tr data-status="${user.status}">
+                                <th scope="row">${user.first_name}</th>
+                                <td>${user.last_name}</td>
+                                <td>${user.complete}</td>
+                                <td>${user.to_do}</td>
+                                <td>${user.in_progress}</td>
+                            </tr>`;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    }
+});
+
+
+</script>
+
 </body>
 
 </html>

@@ -67,5 +67,39 @@ class User {
     
         return $stmt->execute();
     }
+   public function get_id( $email) {
+    try {
+    
+        $query = "SELECT id FROM users WHERE email = :email ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email',$email);
+        $stmt->execute();
+
+        return  $stmt->fetch(PDO::FETCH_COLUMN);
+
+        
+        
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return null;
+    }
 }
+
+
+
+        
+        
+   } catch (PDOException $e) {
+       echo "Error: " . $e->getMessage();
+        return null;
+    }
+
+public function getAllUsers() {
+    $query = "SELECT * FROM users WHERE usertypes_id = 2";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 ?>

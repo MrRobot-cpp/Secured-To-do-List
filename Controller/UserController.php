@@ -66,6 +66,13 @@ class UserController {
             exit();
         }
     }
+        public function get_id($email){
+return $this->userModel->get_id($email);
+    }
+    public function getAllUsers() {
+        return $this->userModel->getAllUsers(); // Call the new method
+    }
+
 
     public function resetPassword() {
         session_start();

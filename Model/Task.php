@@ -74,4 +74,45 @@ class Task {
 
         return $stmt->execute();
     }
+    public function getAllTasks() {
+        $query = "SELECT * FROM tasks";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getTaskCountByStatus($status) {
+        $query = "SELECT COUNT(*) as count FROM tasks WHERE status = :status";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':status', $status);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+    
+
+   
+    public function getTaskCountsByUser($userId) {
+        $sql = "SELECT 
+                    COALESCE(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END), 0) AS done,
+                    COALESCE(SUM(CASE WHEN status = 'to_do' THEN 1 ELSE 0 END), 0) AS to_do,
+                    COALESCE(SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END), 0) AS in_progress
+                FROM {$this->table} WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function getTopFiveUsersByTasks() {
+        $query = "SELECT users.id, users.name, COUNT(tasks.id) as task_count 
+                  FROM {$this->table} tasks
+                  INNER JOIN users ON tasks.user_id = users.id
+                  GROUP BY users.id, users.name
+                  ORDER BY task_count DESC
+                  LIMIT 5";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
