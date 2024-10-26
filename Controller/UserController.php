@@ -42,11 +42,12 @@ class UserController {
             $password = htmlspecialchars($_POST["password"]);
             $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
             $userType = 2; 
+            
             if (strlen($password) < 4) {
                 $_SESSION['signup_message'] = "Password must be at least 4 characters long.";
             } else if (!$this->userModel->usernameExists($fullName) && !$this->userModel->emailExists($email)) {
                 if ($password === $confirmPassword) {
-                    if ($this->userModel->registerUser($fullName, $email, password_hash($password, PASSWORD_DEFAULT), $userType)) {
+                    if ($this->userModel->registerUser($fullName, $email, $password, $userType)) { 
                         $_SESSION['signup_message'] = "Registration successful!";
                     } else {
                         $_SESSION['signup_message'] = "Error: Unable to register user.";
@@ -66,6 +67,7 @@ class UserController {
             exit();
         }
     }
+    
         public function get_id($email){
 return $this->userModel->get_id($email);
     }
