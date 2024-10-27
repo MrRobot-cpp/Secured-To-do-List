@@ -258,11 +258,11 @@ foreach ($users as $userRow) {
             
             <?php foreach ($userData as $user): ?>
                 <tr>
-                    <th scope="row"><?php echo htmlspecialchars($user['name']); ?></th>
+                    <th scope="row"><?php echo ($user['name']); ?></th>
 
-                    <td class="text-center"><?php echo htmlspecialchars($user['done']); ?></td>
-                    <td class="text-center"><?php echo htmlspecialchars($user['to_do']); ?></td>
-                    <td class="text-center"><?php echo htmlspecialchars($user['in_progress']); ?></td>
+                    <td class="text-center"><?php echo ($user['done']); ?></td>
+                    <td class="text-center"><?php echo ($user['to_do']); ?></td>
+                    <td class="text-center"><?php echo ($user['in_progress']); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -506,18 +506,7 @@ barChartTopUsers.render();
   const lineTasks = new ApexCharts(document.querySelector('#line-chart-tasks'), lineChartTasks);
   lineTasks.render();
 //USER STATUS
-document.getElementById('user-status-filter').addEventListener('change', function() {
-  const selectedStatus = this.value;
-  const rows = document.querySelectorAll('tbody tr');
-  
-  rows.forEach(row => {
-    if (selectedStatus === 'all' || row.getAttribute('data-status') === selectedStatus) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
-  });
-});
+
 document.addEventListener("DOMContentLoaded", function() {
     // Fetch users on page load
     fetchUsers();
@@ -527,32 +516,8 @@ document.addEventListener("DOMContentLoaded", function() {
         fetchUsers(this.value);
     });
 
-    function fetchUsers(status = 'all') {
-        fetch('manage_users.php') // This is where manage_users.php should be hosted
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.querySelector("table tbody");
-                tableBody.innerHTML = ''; // Clear table before inserting new rows
-
-                data.forEach(user => {
-                    // Apply filter based on user status
-                    if (status === 'all' || user.status === status) {
-                        const row = `
-                            <tr data-status="${user.status}">
-                                <th scope="row">${user.first_name}</th>
-                                <td>${user.last_name}</td>
-                                <td>${user.complete}</td>
-                                <td>${user.to_do}</td>
-                                <td>${user.in_progress}</td>
-                            </tr>`;
-                        tableBody.insertAdjacentHTML('beforeend', row);
-                    }
-                });
-            })
-            .catch(error => console.error('Error fetching user data:', error));
     }
-});
-
+  );
 
 </script>
 
