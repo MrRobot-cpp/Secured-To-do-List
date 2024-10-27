@@ -69,14 +69,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once '../Controller/UserController.php';
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
-    
+       $cat=["urgent"=>1,"high"=>2,"normal"=>3];
+   
+    if($_POST['priority']==='urgent'){
+        $priorityid=$cat["urgent"];
+    }else if($_POST['priority']==='normal'){
+        $priorityid=$cat["normal"];
+
+        }else{
+            $priorityid=$cat["high"];
+        } 
+        
 $userId =$user->get_id($_SESSION["email"]);
     // $userId = $_POST['user_id'] ?? 0;
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $priority = $_POST['priority'] ?? 'normal';
     $status = $_POST['status'] ?? 'normal'; // Status corresponds to the column it's in
-    $categoryId = 1; // Set default or update as needed.
+    $categoryId = $priorityid; // Set default or update as needed.
     $deadline = $_POST['deadline'] ?? null;
 
     if (!empty($title) && $userId > 0) {
