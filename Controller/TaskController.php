@@ -15,8 +15,8 @@ class TaskController {
     }
 
     // Create a new task
-    public function createTask($userId, $title, $description, $categoryId, $priority, $status, $deadline) {
-        return $this->taskModel->createTask($userId, $title, $description, $categoryId, $priority, $status, $deadline);
+    public function createTask($userId, $title, $description, $status, $categoryId, $priority,  $deadline) {
+        return $this->taskModel->createTask($userId, $title, $description, $status,$categoryId, $priority,  $deadline);
     }
 
     // Update task status (for dragging between columns)
@@ -70,7 +70,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
     $user=new UserController($db);
+    //echo $_SESSION["email"];
+    //
+    $cat=["urgent"=>1,"high"=>2,"normal"=>3];
 
+    if($_POST['priority']==='urgent'){
+        $priorityid=$cat["urgent"];
+    }else if($_POST['priority']==='normal'){
+        $priorityid=$cat["normal"];
+
+        }else{
+            $priorityid=$cat["high"];
+        }
 
 $userId =$user->get_id($_SESSION["email"]);
     // $userId = $_POST['user_id'] ?? 0;
@@ -81,12 +92,13 @@ $userId =$user->get_id($_SESSION["email"]);
     $categoryId = 1; // Set default or update as needed.
     $deadline = $_POST['deadline'] ?? null;
 
-    if (!empty($title) && $userId > 0) {
-        $result = $taskController->createTask($userId, $title, $description, $categoryId, $priority, $status, $deadline);
+    if (!empty($title) || $userId > 0) {
+        $result = $taskController->createTask($userId, $title, $description,$status, $categoryId, $priority,  $deadline);
         echo json_encode(['success' => $result]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid input']);
+        echo json_encode(['success' => false, 'message' => 'failed to create a task']);
     }
     exit();
+
 }
-?>
+

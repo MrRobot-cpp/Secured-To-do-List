@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            formData.append('user_id', userId);  // Use the userId variable defined in HTML
+            //formData.append('user_id', userId);  // Use the userId variable defined in HTML
             formData.append('status', columnElement.getAttribute('data-priority'));
 
             fetch('../Controller/TaskController.php', {
