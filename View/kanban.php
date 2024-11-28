@@ -41,6 +41,7 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
     <link rel="stylesheet" href="../public/assets/css/kanban.css">
 </head>
 <body>
+    
     <div class="container">
         <!-- Vertical Navbar -->
         <aside class="navbar">
@@ -48,6 +49,9 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
             <ul>
                 <li><a href="kanban.php" class="active">Home</a></li>
             </ul>
+
+</aside>
+
         </aside>
 
         <!-- Main Content -->
@@ -105,6 +109,19 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
             <button type="button" id="task-form-cancel">Cancel</button>
         </form>
     </div>
+    <!-- Theme Toggle -->
+    <div id="theme-toggle-container">
+    <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">
+    <div class="theme-selector"  id="theme-dropdown-container">
+        <select id="theme-dropdown">
+            <option value="">Default</option>
+            <option value="dark-theme">Monochrome</option>
+            <option value="high-contrast-theme">Forest</option>
+        </select>
+    </div>
+</div>
+
+
 
     <script src="../public/js/kanban.js"></script>
 </body>

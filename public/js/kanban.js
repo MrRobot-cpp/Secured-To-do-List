@@ -101,4 +101,20 @@ document.addEventListener('DOMContentLoaded', function() {
             form.remove();
         });
     }
+    //theme
+    document.getElementById("theme-dropdown").addEventListener("change", (event) => {
+        const theme = event.target.value; // Get selected theme
+        document.body.className = theme; // Apply theme as a class to the body
+        localStorage.setItem("theme", theme); // Save theme to local storage for persistence
+    });
+    
+    // Load the saved theme on page load
+    window.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme") || "";
+        document.body.className = savedTheme; // Apply saved theme
+        document.getElementById("theme-dropdown").value = savedTheme; // Set dropdown value
+    });
+    
+    
+//end theme    
  });

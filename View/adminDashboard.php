@@ -151,16 +151,19 @@ foreach ($users as $userRow) {
 
                 </form>
                 <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="new/account.png" class="avatar img-fluid" alt="">
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end rounded">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
+                <img src="../public/assets/img/themeLogo.png" class="avatar img-fluid" alt="">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end rounded">
+                <button class="dropdown-item theme-option" data-theme="">Default</button>
+                <button class="dropdown-item theme-option" data-theme="dark-theme">Monochrome</button>
+                <button class="dropdown-item theme-option" data-theme="high-contrast-theme">Forest</button>
+            </div>
+        </li>
+    </ul>
 
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </nav>
               <!-----CARDS------>
@@ -298,7 +301,12 @@ foreach ($users as $userRow) {
 
 
 <script>
-
+document.querySelectorAll('.theme-option').forEach(button => {
+    button.addEventListener('click', () => {
+        const theme = button.getAttribute('data-theme');
+        document.body.className = theme; // Apply the chosen theme
+    });
+});
 
 
 
@@ -332,12 +340,12 @@ const pieChartOptions = {
       show: false,
     },
   },
-  colors: ['#2f2f2f', '#ffcb74', '#111111'],
+  colors: ['var(--primary-text)', 'var(--accent)', 'var(--black)'],
   labels: ['Completed', 'In Progrss', 'To Do'],
   legend: {
     position: 'top',
     labels: {
-      colors: '#f5f7ff',
+      colors: 'var(--accent-dark)',
     },
   },
   tooltip: {
@@ -360,7 +368,7 @@ const barChartGrowthOptions = {
     height: 350,
     background: 'transparent'
   },
-  colors: ['#ffcb74'],
+  colors: ['var(--accent)'],
   plotOptions: {
     bar: {
       horizontal: false,
@@ -375,24 +383,24 @@ const barChartGrowthOptions = {
     categories: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
     labels: {
       style: {
-        colors: '#2f2f2f'
+        colors: 'var(--primary-text)'
       }
     },
-    axisBorder: { color: '#2f2f2f' }
+    axisBorder: { color: 'var(--primary-text)' }
   },
   yaxis: {
     title: {
       text: 'New Users',
-      style: { color: '#2f2f2f' }
+      style: { color: 'var(--primary-text)' }
     },
     labels: {
-      style: { colors: '#2f2f2f' }
+      style: { colors: 'var(--primary-text)' }
     }
   },
-  grid: { borderColor: '#2f2f2f' },
+  grid: { borderColor: 'var(--primary-text)' },
   legend: {
     labels: {
-      colors: '#2f2f2f'
+      colors: 'var(--primary-text)'
     },
     show: true,
     position: 'top'
@@ -420,7 +428,7 @@ const barChartTopUsersOptions = {
       height: 350,
       background: 'transparent'
   },
-  colors: ['#2f2f2f', '#ffcb74'],
+  colors: ['var(--primary-text)', 'var(--accent)'],
   plotOptions: {
       bar: {
           distributed: true,
@@ -431,21 +439,21 @@ const barChartTopUsersOptions = {
       categories: <?php echo $userNamesJson; ?>,
       labels: {
           style: {
-              colors: '#2f2f2f'
+              colors: 'var(--primary-text)'
           }
       },
-      axisBorder: { color: '#2f2f2f' }
+      axisBorder: { color: 'var(--primary-text)' }
   },
   yaxis: {
       title: {
           text: 'Tasks',
-          style: { color: '#2f2f2f' }
+          style: { color: 'var(--primary-text)' }
       },
       labels: {
-          style: { colors: '#2f2f2f' }
+          style: { colors: 'var(--primary-text)' }
       }
   },
-  grid: { borderColor: '#2f2f2f' }
+  grid: { borderColor: 'var(--primary-text)' }
 };
 
 const barChartTopUsers = new ApexCharts(document.querySelector('#bar-chart-top-users'), barChartTopUsersOptions);
@@ -467,7 +475,7 @@ barChartTopUsers.render();
         show: false,
       },
     },
-    colors: ['#ffcb74'],
+    colors: ['var(--accent)'],
     dataLabels: {
       enabled: false,
     },
@@ -479,7 +487,7 @@ barChartTopUsers.render();
       categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'],
       labels: {
         style: {
-          colors: '#2f2f2f',
+          colors: 'var(--primary-text)',
         },
       },
     },
@@ -487,12 +495,12 @@ barChartTopUsers.render();
       title: {
         text: 'Tasks Completed',
         style: {
-          color: '#2f2f2f',
+          color: 'var(--primary-text)',
         },
       },
       labels: {
         style: {
-          colors: '#2f2f2f',
+          colors: 'var(--primary-text)',
         },
       },
     },
