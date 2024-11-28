@@ -37,15 +37,16 @@ class User {
         return $stmt->rowCount() > 0;
     }
 // REGISTER
-    public function registerUser($fullName, $email, $password, $usertypes_id) {
+    public function registerUser($fullName, $email, $password, $usertypes_id,$verification_code) {
+
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (name, email, password, usertypes_id) VALUES (:name, :email, :password, :usertypes_id)";
+        $sql = "INSERT INTO users (name, email, password, usertypes_id,verification_code) VALUES (:name, :email, :password, :usertypes_id,:verification_code)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':name', $fullName);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashedPassword);
         $stmt->bindParam(':usertypes_id', $usertypes_id);
-        
+        $stmt->bindParam(':verification_code',$verification_code);
         return $stmt->execute();
     }
 

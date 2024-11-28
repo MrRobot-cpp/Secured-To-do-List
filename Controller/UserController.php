@@ -1,7 +1,12 @@
 <?php
 require_once '../Model/Database.php';
 require_once '../Model/User.php';
-
+require_once __DIR__ . '\PHPMailer-master\src\Exception.php';
+require_once __DIR__ . '\PHPMailer-master\src\PHPMailer.php';
+require_once __DIR__ . '\PHPMailer-master\src\SMTP.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -11,7 +16,44 @@ class UserController {
     public function __construct($db) {
         $this->userModel = new User($db);
     }
-
+   public function VerificationCode ($length=6){
+        $characters='0123456789';
+        $code="";
+        for ($i = 0; $i < $length; $i++) {
+            $code .= $characters [rand(0, strlen($characters)-1)];
+        }
+        return $code;
+        }
+       public function VerificationEmail($email,$verificationCode){
+            $mail=new PHPMailer(true);
+            $miamail="wandenreich111@gmail.com";
+            $mianame="kanaban@nonreply";
+            $miapassword="azehhtmxgxtevpgc";
+            
+            try {
+                $mail->SMTPDebug=SMTP::DEBUG_OFF;
+                $mail->isSMTP();
+                $mail->Host='smtp.gmail,com';
+                $mail->SMTPAuth=true;
+                $mail->Username=$miamail;
+                $mail->Password=$miapassword;
+                $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port=587;
+            
+                $mail->setFrom($miamail,$mianame);
+                $mail->addAddress($email);
+                $mail->Subject='Email Verification';
+                $mail->body="your verification code is: $verificationCode";
+                $mail->send();
+                return true;
+            
+            
+            } catch (Exception $e) {
+                echo $e;
+                return false;
+            }
+            
+            }
     public function login() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
@@ -41,13 +83,15 @@ class UserController {
             $email = htmlspecialchars($_POST["email"]);
             $password = htmlspecialchars($_POST["password"]);
             $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
-            $userType = 2; 
-            
+            $userType = 2;
+            $code=$this->VerificationCode();
+            $this->VerificationEmail($email,$code);
+            echo"send!!";
             if (strlen($password) < 4) {
                 $_SESSION['signup_message'] = "Password must be at least 4 characters long.";
             } else if (!$this->userModel->usernameExists($fullName) && !$this->userModel->emailExists($email)) {
                 if ($password === $confirmPassword) {
-                    if ($this->userModel->registerUser($fullName, $email, $password, $userType)) { 
+                    if ($this->userModel->registerUser($fullName, $email, $password, $userType,$code)) { 
                         $_SESSION['signup_message'] = "Registration successful!";
                     } else {
                         $_SESSION['signup_message'] = "Error: Unable to register user.";
@@ -63,7 +107,7 @@ class UserController {
                     $_SESSION['signup_message'] = "Email already exists.";
                 }
             }
-            header("Location: ../view/login.php"); 
+            header("Location: ../view/verification.php"); 
             exit();
         }
     }
@@ -126,4 +170,3 @@ if ($conn) {
 } else {
     echo "Database connection failed!";
 }
-?>

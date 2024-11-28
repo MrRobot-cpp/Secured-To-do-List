@@ -15,8 +15,8 @@ class TaskController {
     }
 
     // Create a new task
-    public function createTask($userId, $title, $description, $status, $categoryId, $priority,  $deadline) {
-        return $this->taskModel->createTask($userId, $title, $description, $status,$categoryId, $priority,  $deadline);
+    public function createTask($userId, $title, $description, $status, $priority, $categoryId,   $deadline) {
+        return $this->taskModel->createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline);
     }
 
     // Update task status (for dragging between columns)
@@ -97,7 +97,7 @@ $userId =$user->get_id($_SESSION["email"]);
     $deadline = $_POST['deadline'] ?? null;
 
     if (!empty($title) || $userId > 0) {
-        $result = $taskController->createTask($userId, $title, $description,$status, $categoryId, $priority,  $deadline);
+        $result = $taskController->createTask($userId, $title, $description,$status,$priority, $categoryId,   $deadline);
         echo json_encode(['success' => $result]);
     } else {
         echo json_encode(['success' => false, 'message' => 'failed to create a task']);
