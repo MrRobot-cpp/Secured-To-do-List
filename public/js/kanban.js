@@ -101,20 +101,40 @@ document.addEventListener('DOMContentLoaded', function() {
             form.remove();
         });
     }
-    //theme
-    document.getElementById("theme-dropdown").addEventListener("change", (event) => {
-        const theme = event.target.value; // Get selected theme
-        document.body.className = theme; // Apply theme as a class to the body
-        localStorage.setItem("theme", theme); // Save theme to local storage for persistence
+//theme toggle
+const themeToggleButton = document.getElementById('theme-toggle-button');
+const themeDropdownContainer = document.getElementById('theme-dropdown-container');
+const themeOptions = document.querySelectorAll('.theme-option');
+
+if (themeToggleButton && themeDropdownContainer) {
+    themeToggleButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        themeDropdownContainer.classList.toggle('visible');
+        themeDropdownContainer.classList.toggle('hidden');
     });
-    
-    // Load the saved theme on page load
-    window.addEventListener("DOMContentLoaded", () => {
-        const savedTheme = localStorage.getItem("theme") || "";
-        document.body.className = savedTheme; // Apply saved theme
-        document.getElementById("theme-dropdown").value = savedTheme; // Set dropdown value
+
+    themeOptions.forEach(option => {
+        option.addEventListener('click', function () {
+            const theme = option.getAttribute('data-theme');
+            document.body.className = theme;
+            themeDropdownContainer.classList.add('hidden');
+            themeDropdownContainer.classList.remove('visible');
+        });
     });
-    
-    
-//end theme    
- });
+
+    document.addEventListener('click', function (event) {
+        if (!themeToggleButton.contains(event.target) && !themeDropdownContainer.contains(event.target)) {
+            themeDropdownContainer.classList.add('hidden');
+            themeDropdownContainer.classList.remove('visible');
+        }
+    });
+}//end theme toggle
+});
+
+
+
+
+
+
+
+

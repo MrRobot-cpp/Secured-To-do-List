@@ -11,7 +11,8 @@
   --extra-extra:#e0e0e0;
   --so-extra:#5e5c5cc7;
 }
-.high-contrast-theme {
+/*forest*/
+.forest-theme {
   --primary-bg: #9e786490;
   --primary-text: #0e0906b6;
   --accent:  #7d957a;
@@ -37,8 +38,8 @@
   --so-extra:#402f24;
 }*/
 
-/* Dark Theme */
-.dark-theme {
+/* monochrome */
+.monochrome-theme {
   --primary-bg: #d9cec5;
   --primary-text: #37322c;
   --accent: #8c7764;
@@ -366,24 +367,54 @@ color: var(--so-extra);}
 
 
 /*    dropdown menu      */
-/* Dropdown Styling */
-.dropdown-menu {
-  padding: 0.5rem;
+#theme-toggle-container {
+  position: fixed;
+  top: 10px;
+  right:10px;
+  margin-top: 10px;
+  z-index: 1000;
 }
-
-.theme-option {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 0.5rem 1rem;
-  color: var(--primary-text);
+#theme-toggle-button {
   cursor: pointer;
+  width: 40px; 
+  height: 40px;
 }
 
-.theme-option:hover {
+.theme-selector {
+  position: absolute;
+  top: 0; 
+  right: 0;
+  background-color: var(--card-b);
+  border: 1px solid var(--primary-text);
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: none; 
+}
+
+.theme-selector ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.theme-selector li {
+  padding: 10px;
+  cursor: pointer;
+  color: var(--primary-text);
+  background-color: var(--primary-bg);
+  transition: background-color 0.3s;
+}
+
+.theme-selector li:hover {
   background-color: var(--accent);
   color: var(--primary-bg);
 }
 
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}

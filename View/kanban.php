@@ -109,17 +109,19 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
             <button type="button" id="task-form-cancel">Cancel</button>
         </form>
     </div>
-    <!-- Theme Toggle -->
+            <!--theme toggle-->
     <div id="theme-toggle-container">
     <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">
-    <div class="theme-selector"  id="theme-dropdown-container">
-        <select id="theme-dropdown">
-            <option value="">Default</option>
-            <option value="dark-theme">Monochrome</option>
-            <option value="high-contrast-theme">Forest</option>
-        </select>
+    <div class="theme-selector hidden" id="theme-dropdown-container">
+        <ul>
+            <li class="theme-option" data-theme="">Default</li>
+            <li class="theme-option" data-theme="monochrome-theme">Monochrome</li>
+            <li class="theme-option" data-theme="forest-theme">Forest</li>
+        </ul>
     </div>
+           <!--end theme toggle-->
 </div>
+
 
 
 

@@ -98,7 +98,7 @@ foreach ($users as $userRow) {
 </head>
 
 <body>
-    <div class="wrapper">
+<div class="wrapper">
 <!------SIDEBAR------->
         <aside id="sidebar">
             <div class="d-flex">
@@ -145,26 +145,17 @@ foreach ($users as $userRow) {
             </div>
         </aside>
         <div class="main">
-            <!--ADMIN PICTURE-->
+            <!--THEME TOGGLE-->
             <nav class="navbar navbar-expand px-4 py-3">
-                <form action="#" class="d-none d-sm-inline-block">
-
-                </form>
-                <div class="navbar-collapse collapse">
-    <ul class="navbar-nav ms-auto">
-        <li class="nav-item dropdown">
-            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                <img src="../public/assets/img/themeLogo.png" class="avatar img-fluid" alt="">
-            </a>
-            <div class="dropdown-menu dropdown-menu-end rounded">
-                <button class="dropdown-item theme-option" data-theme="">Default</button>
-                <button class="dropdown-item theme-option" data-theme="dark-theme">Monochrome</button>
-                <button class="dropdown-item theme-option" data-theme="high-contrast-theme">Forest</button>
-            </div>
-        </li>
-    </ul>
-
-                </div>
+                <div id="theme-toggle-container">
+    <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">
+    <div class="theme-selector hidden" id="theme-dropdown-container">
+        <ul>
+            <li class="theme-option" data-theme="">Default</li>
+            <li class="theme-option" data-theme="monochrome-theme">Monochrome</li>
+            <li class="theme-option" data-theme="forest-theme">Forest</li>
+        </ul>
+    </div>
             </nav>
               <!-----CARDS------>
             <div class="row"id="Statistics">
@@ -301,12 +292,34 @@ foreach ($users as $userRow) {
 
 
 <script>
-document.querySelectorAll('.theme-option').forEach(button => {
-    button.addEventListener('click', () => {
-        const theme = button.getAttribute('data-theme');
-        document.body.className = theme; // Apply the chosen theme
+//theme toggle
+const themeToggleButton = document.getElementById('theme-toggle-button');
+const themeDropdownContainer = document.getElementById('theme-dropdown-container');
+const themeOptions = document.querySelectorAll('.theme-option');
+
+if (themeToggleButton && themeDropdownContainer) {
+    themeToggleButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        themeDropdownContainer.classList.toggle('visible');
+        themeDropdownContainer.classList.toggle('hidden');
     });
-});
+
+    themeOptions.forEach(option => {
+        option.addEventListener('click', function () {
+            const theme = option.getAttribute('data-theme');
+            document.body.className = theme;
+            themeDropdownContainer.classList.add('hidden');
+            themeDropdownContainer.classList.remove('visible');
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!themeToggleButton.contains(event.target) && !themeDropdownContainer.contains(event.target)) {
+            themeDropdownContainer.classList.add('hidden');
+            themeDropdownContainer.classList.remove('visible');
+        }
+    });
+}//end theme toggle
 
 
 
