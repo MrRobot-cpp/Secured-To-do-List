@@ -81,7 +81,7 @@ unset($_SESSION['signup_message']);
     });
     });
     
-    
+    // compare the data entered by the user and the one in the database then redirect to the login page//
 </script>
 </body>
 </html>
