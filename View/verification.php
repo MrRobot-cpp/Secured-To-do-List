@@ -31,12 +31,12 @@ unset($_SESSION['signup_message']);
 
     <form id="loginpage" action="../Controller/UserController.php" method="POST">
         <div class="fields">
-        <input id="loginemail" type="text" name="email" placeholder="enter the 6-digit code" required>
+        <input id="loginemail" type="text" name="verification_code" placeholder="enter the 6-digit code" required>
         <i class="fa-solid fa-lock icon"></i>
     </div>
 
     <div class="fields button">
-        <input type="submit" value="Submit" name="login">
+        <input type="submit" value="verify" name="verify">
     </div>
 
     
@@ -81,7 +81,6 @@ unset($_SESSION['signup_message']);
     });
     });
     
-    // compare the data entered by the user and the one in the database then redirect to the login page//
-</script>
+    </script>
 </body>
 </html>

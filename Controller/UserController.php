@@ -16,44 +16,48 @@ class UserController {
     public function __construct($db) {
         $this->userModel = new User($db);
     }
-   public function VerificationCode ($length=6){
-        $characters='0123456789';
-        $code="";
-        for ($i = 0; $i < $length; $i++) {
-            $code .= $characters [rand(0, strlen($characters)-1)];
-        }
-        return $code;
-        }
-       public function VerificationEmail($email,$verificationCode){
-            $mail=new PHPMailer(true);
-            $miamail="wandenreich111@gmail.com";
-            $mianame="kanaban@nonreply";
-            $miapassword="azehhtmxgxtevpgc";
-            
-            try {
-                $mail->SMTPDebug=SMTP::DEBUG_OFF;
-                $mail->isSMTP();
-                $mail->Host='smtp.gmail,com';
-                $mail->SMTPAuth=true;
-                $mail->Username=$miamail;
-                $mail->Password=$miapassword;
-                $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port=587;
-            
-                $mail->setFrom($miamail,$mianame);
-                $mail->addAddress($email);
-                $mail->Subject='Email Verification';
-                $mail->body="your verification code is: $verificationCode";
-                $mail->send();
-                return true;
-            
-            
-            } catch (Exception $e) {
-                echo $e;
-                return false;
+    public function VerificationCode ($length=6){
+        session_start();
+        
+            $characters='0123456789';
+            $code="";
+            for ($i = 0; $i < $length; $i++) {
+                $code .= $characters [rand(0, strlen($characters)-1)];
             }
-            
+            $_SESSION['verification']=$code;
+            return $code;
             }
+        public function VerificationEmail($email,$verificationCode){
+                $mail=new PHPMailer(true);
+                $miamail="wandenreich111@gmail.com";
+                $mianame="kanaban@nonreply";
+                $miapassword="azehhtmxgxtevpgc";
+                
+                try {
+                    $mail->SMTPDebug=SMTP::DEBUG_OFF;//return it back t off after fininshing the debuging
+                    $mail->isSMTP();
+                    $mail->Host='smtp.gmail.com';
+                    $mail->SMTPAuth=true;
+                    $mail->Username=$miamail;
+                    $mail->Password=$miapassword;
+                    $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port=587;
+                
+                    $mail->setFrom($miamail,$mianame);
+                    $mail->addAddress($email);
+                    $mail->Subject='Email Verification';
+                    $mail->Body="your verification code is: $verificationCode";
+                    $mail->send();
+                    return true;
+                
+                
+                } catch (Exception $e) {
+               echo "erreo in sending the mail".$mail->ErrorInfo;
+                    
+                    return false;
+                }
+                
+                }
     public function login() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
@@ -75,7 +79,27 @@ class UserController {
             }
         }
     }
+    public function verify() {// hna h3mel retieve ll verification code mn el session 
+        session_start();
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verification_code'])) {
+            $email = htmlspecialchars($_POST['email']);
+            $clientCode = htmlspecialchars($_POST['verification_code']);
+           $this->VerificationCode();
+            $devcode=$_SESSION['verification'];
+            
+            $this->VerificationEmail($email,$devcode);
 
+                if($devcode==$clientCode){
+                $_SESSION['message'] = "Account verified successfully!";
+                header("Location: ../View/login.php");
+            }else {
+                $_SESSION['message'] = "Invalid verification code or email.";
+                header("Location: ../View/verification.php");
+            }
+            exit();
+        }
+    }
+    
     public function signup() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
@@ -84,14 +108,14 @@ class UserController {
             $password = htmlspecialchars($_POST["password"]);
             $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
             $userType = 2;
-            $code=$this->VerificationCode();
-            $this->VerificationEmail($email,$code);
-            echo"send!!";
+                
+            $this->verify();
+           
             if (strlen($password) < 4) {
                 $_SESSION['signup_message'] = "Password must be at least 4 characters long.";
             } else if (!$this->userModel->usernameExists($fullName) && !$this->userModel->emailExists($email)) {
                 if ($password === $confirmPassword) {
-                    if ($this->userModel->registerUser($fullName, $email, $password, $userType,$code)) { 
+                    if ($this->userModel->registerUser($fullName, $email, $password, $userType)) { 
                         $_SESSION['signup_message'] = "Registration successful!";
                     } else {
                         $_SESSION['signup_message'] = "Error: Unable to register user.";
@@ -166,6 +190,9 @@ if ($conn) {
         $controller->signup();
     } elseif (isset($_POST['reset_password'])) { 
         $controller->resetPassword();
+    }
+    elseif  (isset($_POST['verify'])){
+        $controller->verify();
     }
 } else {
     echo "Database connection failed!";
