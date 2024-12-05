@@ -7,6 +7,9 @@ require_once __DIR__ . '\PHPMailer-master\src\SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 $database = new Database();
 $conn = $database->getConnection();
 
@@ -52,7 +55,8 @@ class UserController {
                 
                 
                 } catch (Exception $e) {
-               echo "erreo in sending the mail".$mail->ErrorInfo;
+                    echo"mailing error".$e->getMessage();
+               echo "error in sending the mail".$mail->ErrorInfo;
                     
                     return false;
                 }
@@ -79,24 +83,33 @@ class UserController {
             }
         }
     }
-    public function verify() {// hna h3mel retieve ll verification code mn el session 
+    
+    public function verify() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verification_code'])) {
-            $email = htmlspecialchars($_POST['email']);
             $clientCode = htmlspecialchars($_POST['verification_code']);
-           $this->VerificationCode();
-            $devcode=$_SESSION['verification'];
-            
-            $this->VerificationEmail($email,$devcode);
-
-                if($devcode==$clientCode){
-                $_SESSION['message'] = "Account verified successfully!";
-                header("Location: ../View/login.php");
-            }else {
-                $_SESSION['message'] = "Invalid verification code or email.";
-                header("Location: ../View/verification.php");
+            $storedCode = $_SESSION['verification'] ?? null;
+    
+                   if ($clientCode === $storedCode && isset($_SESSION['temp_user'])) {
+               
+                $tempUser = $_SESSION['temp_user'];
+    
+                
+                if ($this->userModel->registerUser($tempUser['name'], $tempUser['email'], $tempUser['password'], $tempUser['userType'])) {
+                    unset($_SESSION['temp_user'], $_SESSION['verification']);
+                    $_SESSION['message'] = "Account verified and created successfully!";
+                    header("Location: ../view/login.php");
+                    exit();
+                } else {
+                    $_SESSION['message'] = "Error creating account.";
+                    header("Location: ../view/verification.php");
+                    exit();
+                }
+            } else {
+                $_SESSION['message'] = "Invalid verification code.";
+                header("Location: ../view/verification.php");
+                exit();
             }
-            exit();
         }
     }
     
@@ -108,33 +121,46 @@ class UserController {
             $password = htmlspecialchars($_POST["password"]);
             $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
             $userType = 2;
-                
-            $this->verify();
-           
+    
             if (strlen($password) < 4) {
                 $_SESSION['signup_message'] = "Password must be at least 4 characters long.";
-            } else if (!$this->userModel->usernameExists($fullName) && !$this->userModel->emailExists($email)) {
-                if ($password === $confirmPassword) {
-                    if ($this->userModel->registerUser($fullName, $email, $password, $userType)) { 
-                        $_SESSION['signup_message'] = "Registration successful!";
-                    } else {
-                        $_SESSION['signup_message'] = "Error: Unable to register user.";
-                    }
-                } else {
-                    $_SESSION['signup_message'] = "Passwords do not match.";
-                }
-            } else {
-                if ($this->userModel->usernameExists($fullName)) {
-                    $_SESSION['signup_message'] = "Username already exists.";
-                }
-                if ($this->userModel->emailExists($email)) {
-                    $_SESSION['signup_message'] = "Email already exists.";
-                }
+                header("Location: ../view/signup.php");
+                exit();
             }
-            header("Location: ../view/verification.php"); 
-            exit();
+    
+            if ($password !== $confirmPassword) {
+                $_SESSION['signup_message'] = "Passwords do not match.";
+                header("Location: ../view/signup.php");
+                exit();
+            }
+    
+            if ($this->userModel->usernameExists($fullName) || $this->userModel->emailExists($email)) {
+                $_SESSION['signup_message'] = "Username or email already exists.";
+                header("Location: ../view/signup.php");
+                exit();
+            }
+    
+            
+            $_SESSION['temp_user'] = [
+                'name' => $fullName,
+                'email' => $email,
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'userType' => $userType
+            ];
+    
+            $verificationCode = $this->VerificationCode();
+            if ($this->VerificationEmail($email, $verificationCode)) {
+                $_SESSION['signup_message'] = "Check your inbox for verification";
+                header("Location: ../view/verification.php");
+                exit();
+            } else {
+                $_SESSION['signup_message'] = "Error sending verification email.";
+                header("Location: ../view/signup.php");
+                exit();
+            }
         }
     }
+    
     
         public function get_id($email){
 return $this->userModel->get_id($email);
