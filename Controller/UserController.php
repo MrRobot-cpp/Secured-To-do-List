@@ -30,14 +30,15 @@ class UserController {
             $_SESSION['verification']=$code;
             return $code;
             }
-        public function VerificationEmail($email,$verificationCode){
+           
+            public function SendEmail($email,$Subject,$body){
                 $mail=new PHPMailer(true);
                 $miamail="wandenreich111@gmail.com";
                 $mianame="kanaban@nonreply";
                 $miapassword="azehhtmxgxtevpgc";
                 
                 try {
-                    $mail->SMTPDebug=SMTP::DEBUG_OFF;//return it back t off after fininshing the debuging
+                    $mail->SMTPDebug=SMTP::DEBUG_OFF;
                     $mail->isSMTP();
                     $mail->Host='smtp.gmail.com';
                     $mail->SMTPAuth=true;
@@ -48,8 +49,8 @@ class UserController {
                 
                     $mail->setFrom($miamail,$mianame);
                     $mail->addAddress($email);
-                    $mail->Subject='Email Verification';
-                    $mail->Body="your verification code is: $verificationCode";
+                    $mail->Subject="$Subject";
+                    $mail->Body="$body";
                     $mail->send();
                     return true;
                 
@@ -60,8 +61,30 @@ class UserController {
                     
                     return false;
                 }
-                
+              
+            }
+        public function VerificationEmail($email,$verificationCode){
+            $body="your verification code is $verificationCode";
+            $subject="Verification Email";
+              $this->SendEmail($email,$subject,$body);  
                 }
+
+                
+            public function checkDeadline($deadline) {
+                    $subject=" a late task";
+                    $body="your deadline has passed";
+                                $deadlineDate = new DateTime($deadline);
+                                $currentDate = new DateTime();
+                            
+                                $interval = $currentDate->diff($deadlineDate);
+                            
+                                if ($currentDate > $deadlineDate) {
+                                    $this->SendEmail($_SESSION['email'],$subject,$body);
+                                    return "The deadline has passed.";
+                                } else {
+                                    return "Time remaining: " . $interval->format('%d days, %h hours, %i minutes');
+                                }
+                            }
     public function login() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
