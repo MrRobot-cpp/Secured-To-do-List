@@ -19,18 +19,17 @@ class Project {
         return $stmt->execute();
     }
 
-    // Update a project
-    public function updateProject($projectId, $name, $taskId = null) {
+    public function updateProject($projectId, $name) {
         $sql = "UPDATE {$this->table} SET 
-                name = :name, 
+                name = :name 
                 WHERE id = :projectId";
+        
         $stmt = $this->conn->prepare($sql);
-
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':projectId', $projectId);
-
         return $stmt->execute();
     }
+    
 
     // Delete a project
     public function deleteProject($projectId) {

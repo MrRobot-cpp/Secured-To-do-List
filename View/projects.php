@@ -59,6 +59,9 @@ $projects = $projectController->getProjectsByUserId($_SESSION['user_id']);
                     echo "<div class='project-column' data-id='" . $project['id'] . "'>";
                     echo "<h3>" . htmlspecialchars($project['name']) . "</h3>";
                     echo "<button class='add-task-btn' data-project-id='" . $project['id'] . "'>Add Task</button>";
+                    echo "<button class='update-btn' data-project-id='" . $project['id'] . "'>Update</button>";
+                    echo "<button class='delete-btn' data-project-id='" . $project['id'] . "'>Delete</button>";
+                    
                     echo "</div>";
                 }
                 ?>
@@ -76,6 +79,17 @@ $projects = $projectController->getProjectsByUserId($_SESSION['user_id']);
         </form>
     </div>
 
+    <!-- Update Project Form -->
+    <div id="update-form" style="display: none;">
+        <form action="../Controller/ProjectController.php" method="POST">
+            <input type="hidden" name="project_id" id="update_project_id" value="">
+            <input type="text" name="name" id="update_project_name" placeholder="Project Name" required>
+            <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+            <button type="submit" name="update_project">Update Project</button>
+            <button type="button" id="update-form-cancel">Cancel</button>
+        </form>
+    </div>
+
     <!-- Theme Toggle -->
     <div id="theme-toggle-container">
         <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">
@@ -88,14 +102,17 @@ $projects = $projectController->getProjectsByUserId($_SESSION['user_id']);
         </div>
     </div>
 
-
-    <!-- Place your script here -->
+    <!-- JavaScript -->
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     const newProjectButton = document.getElementById('new-project-btn');
     const projectFormContainer = document.getElementById('project-form');
     const projectCancelButton = document.getElementById('project-form-cancel');
     const addTaskButtons = document.querySelectorAll('.add-task-btn');
+    const updateButtons = document.querySelectorAll('.update-btn');
+    const updateFormContainer = document.getElementById('update-form');
+    const updateCancelButton = document.getElementById('update-form-cancel');
+    const deleteButtons = document.querySelectorAll('.delete-btn');
 
     // Show the New Project Form
     newProjectButton.addEventListener('click', function() {
@@ -112,8 +129,24 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const projectId = button.getAttribute('data-project-id');
             // Navigate to the Kanban page with the specific project ID
-            window.location.href = `kanban.php?project_id=${projectId}`;
+            window.location.href = `../view/kanban.php?project_id=${projectId}`;
         });
+    });
+
+    // Show the Update Project Form
+    updateButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const projectId = button.getAttribute('data-project-id');
+            const projectName = button.closest('.project-column').querySelector('h3').innerText;
+            document.getElementById('update_project_id').value = projectId;
+            document.getElementById('update_project_name').value = projectName;
+            updateFormContainer.style.display = 'block';
+        });
+    });
+
+    // Cancel the Update Form
+    updateCancelButton.addEventListener('click', function() {
+        updateFormContainer.style.display = 'none';
     });
 
     // Theme Toggle functionality
@@ -144,7 +177,47 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const projectId = button.getAttribute('data-project-id');
+            const confirmation = confirm("Are you sure you want to delete this project?");
+            
+            if (confirmation) {
+                fetch('../Controller/ProjectController.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `delete_project=true&project_id=${projectId}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'success') {
+                        alert("Project deleted successfully!");
+                        const projectColumn = button.closest('.project-column');
+                        if (projectColumn) {
+                            projectColumn.remove();
+                        }
+                    } else {
+                        alert("Failed to delete project.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again.");
+                });
+            }
+        });
+    });
 });
+
+
+
+
+
+
 
     </script>
 </body>

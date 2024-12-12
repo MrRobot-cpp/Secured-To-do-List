@@ -64,12 +64,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_project'])) {
     if (!empty($name) && $userId > 0) {
         $result = $projectController->createProject($userId, $name);
         if ($result) {
-            header("Location: kanban.php");  // Redirect back to the project dashboard after adding
+            header("Location: ../view/kanban.php");  // Redirect back to the project dashboard after adding
             exit();
         } else {
             // Handle error if project could not be added
             echo "Failed to add project. Please try again.";
         }
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
+    session_start();
+    require_once '../Model/Database.php';
+    require_once '../Controller/UserController.php';
+
+    $db = (new Database())->getConnection();
+    $projectController = new ProjectController($db);
+    $projectId = $_POST['project_id'] ?? 0;
+    $userId = $_POST['user_id'] ?? 0;
+    $name = $_POST['name'] ?? '';
+    
+    if (!empty($name) && $userId > 0 && $projectId > 0) {
+        $result = $projectController->updateProject($projectId, $name);
+        if ($result) {
+            header("Location: ../view/kanban.php"); 
+            exit();
+        } else {
+            echo "Failed to update project. Please try again.";
+        }
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project']) && isset($_POST['project_id'])) {
+    session_start();
+    require_once '../Model/Database.php';
+    require_once '../Controller/ProjectController.php';
+    
+    $db = (new Database())->getConnection();
+    $projectController = new ProjectController($db);
+    
+    $projectId = $_POST['project_id'] ?? 0;
+    
+    if ($projectId > 0) {
+        $result = $projectController->deleteProject($projectId);
+        
+        if ($result) {
+            echo 'success'; 
+        } else {
+            echo 'failure'; 
+        }
+    } else {
+        echo 'failure'; 
     }
 }
 
