@@ -62,9 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         form.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
+            const projectId = new URLSearchParams(window.location.search).get('project_id');
             const formData = new FormData(event.target);
-
-            // Add project_id and status to the FormData
             formData.append('project_id', projectId);
             formData.append('status', columnElement.getAttribute('data-priority'));
 

@@ -279,7 +279,20 @@ body {
     margin: 5px 0;
 }
 
-.add-task-btn, #new-project-btn {
+.add-task-btn,.update-btn,.delete-btn{
+    background-color: var(--accent);
+    color: var(--black);
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 30%;
+    margin: 5px;
+}
+
+
+#new-project-btn {
+  
     background-color: var(--accent);
     color: var(--black);
     text-align: center;
@@ -289,11 +302,11 @@ body {
     width: 100%;
 }
 
-.add-task-btn:hover ,#new-project-btn:hover{
+.add-task-btn:hover ,.update-btn:hover,.delete-btn:hover,#new-project-btn:hover{
     background-color:var(--accent-dark);
 }
 
-#project-form {
+#project-form, #update-form {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -309,14 +322,14 @@ body {
 
 
 
-#project-form form {
+#project-form form,#update-form form {
     display: flex;
     flex-direction: column;
 }
 
 #project-form input[type="text"],
 #project-form textarea,
-#project-form select {
+#project-form select,#update-form input[type="text"] ,#update-form textarea,#update-form select {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 4px;
@@ -326,25 +339,25 @@ body {
     font-size: 16px;
 }
 
-#project-form button {
+#project-form button,#update-form button {
     padding: 10px;
     border-radius: 4px;
     border: none;
     cursor: pointer;
 }
 
-#project-form button[type="submit"] {
+#project-form button[type="submit"] ,#update-form button[type="submit"] {
     background-color: var(--accent);
     color: var(--black);
     margin-bottom: 10px;
 }
 
-#project-form button[type="button"] {
+#project-form button[type="button"] ,#update-form button[type="button"] {
     background-color: var(--button);
     color: var(--card-bg);
 }
 
-#project-form button[type="button"]:hover {
+#project-form button[type="button"]:hover,#update-form button[type="button"]:hover{
     background-color: var(--button-hover);
 }
 

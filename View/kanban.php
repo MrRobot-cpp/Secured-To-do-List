@@ -44,7 +44,6 @@ if ($usertypes_id != 2) {
     <link rel="stylesheet" href="../public/assets/css/kanban.css">
 </head>
 <body>
-<?php echo $projectId?>
     <div class="container">
         <!-- Vertical Navbar -->
         <aside class="navbar">
@@ -108,7 +107,7 @@ if ($usertypes_id != 2) {
                 <option value="normal">Normal</option>
             </select>
             <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
-            <input type="hidden" name="project_id" value="<?php echo $projectId?>">
+            <input type="hidden" name="project_id" value="<?php echo $_GET['project_id']; ?>" />
 
             <button type="submit" name="add_task">Add Task</button>
             <button type="button" id="task-form-cancel">Cancel</button>

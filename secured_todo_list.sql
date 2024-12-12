@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2024 at 09:07 AM
+-- Generation Time: Dec 12, 2024 at 06:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -78,7 +78,13 @@ CREATE TABLE `projects` (
 INSERT INTO `projects` (`id`, `name`, `user_id`) VALUES
 (1, 'Mariam', 2),
 (2, 'Mariam', 2),
-(3, 'project', 5);
+(3, 'project', 5),
+(4, 'admin', 2),
+(5, 'Mariam Shaddad', 2),
+(6, 'hjrhr', 2),
+(7, 'hjrhr', 2),
+(10, 'hjrhr', 2),
+(11, 'hjrhr', 2);
 
 -- --------------------------------------------------------
 
@@ -105,7 +111,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `user_id`, `title`, `description`, `status`, `priority`, `category_id`, `deadline`, `created_at`, `updated_at`, `project_id`) VALUES
-(0, 2, 'exercise', 'kkk', 'urgent', 'urgent', 1, NULL, '2024-12-12 07:33:49', '2024-12-12 07:33:49', 2);
+(1, 2, 'exercise', '30 mins', 'urgent', 'high', 2, NULL, '2024-12-12 17:25:32', '2024-12-12 17:25:32', 5);
 
 -- --------------------------------------------------------
 
@@ -169,7 +175,9 @@ ALTER TABLE `projects`
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD KEY `fk_project_id` (`project_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_project_id` (`project_id`),
+  ADD KEY `fk_user_id_tasks` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -185,7 +193,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -201,7 +215,8 @@ ALTER TABLE `projects`
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `fk_project_id` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_project_id` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_id_tasks` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
