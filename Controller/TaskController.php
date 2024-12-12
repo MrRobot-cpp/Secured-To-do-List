@@ -15,8 +15,8 @@ class TaskController {
     }
 
     // Create a new task
-    public function createTask($userId, $title, $description, $status, $priority, $categoryId,   $deadline) {
-        return $this->taskModel->createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline);
+    public function createTask($userId, $title, $description, $status, $priority, $categoryId,   $deadline, $projectId) {
+        return $this->taskModel->createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId);
     }
 
     // Update task status (for dragging between columns)
@@ -25,8 +25,8 @@ class TaskController {
     }
 
     // Update a task (full update)
-    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline) {
-        return $this->taskModel->updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline);
+    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId) {
+        return $this->taskModel->updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId);
     }
 
     // Delete a task
@@ -57,19 +57,26 @@ class TaskController {
     public function getTaskCountsByUser($userId) {
         return $this->taskModel->getTaskCountsByUser($userId);
     }
-
+    public function getTasksByProjectId($projectId){
+        return $this->taskModel->getTasksByProjectId($projectId);
+    }
 
 
 
 }  
 // Handle the POST request for task creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
     session_start();
     require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
+    
+
     $db = (new Database())->getConnection();
     $taskController = new TaskController($db);
     $user=new UserController($db);
+    
+
     //echo $_SESSION["email"];
     //
     $cat=["urgent"=>1,"high"=>2,"normal"=>3];
@@ -88,6 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
 $userId =$user->get_id($_SESSION["email"]);
+    // Get project_id from the POST request
+    $projectId = isset($_GET['project_id']) ? $_GET['project_id'] : null;
+
+    if ($projectId === null) {
+        echo "Project ID is missing.";
+        exit();
+    }
+    echo $projectId;
+    echo $userId;
+
     // $userId = $_POST['user_id'] ?? 0;
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
@@ -96,8 +113,10 @@ $userId =$user->get_id($_SESSION["email"]);
     $categoryId = $priorityid; // Set default or update as needed.
     $deadline = $_POST['deadline'] ?? null;
 
+
+
     if (!empty($title) || $userId > 0) {
-        $result = $taskController->createTask($userId, $title, $description,$status,$priority, $categoryId,   $deadline);
+        $result = $taskController->createTask($userId, $title, $description,$status,$priority, $categoryId,   $deadline, $projectId);
         echo json_encode(['success' => $result]);
     } else {
         echo json_encode(['success' => false, 'message' => 'failed to create a task']);
@@ -105,4 +124,3 @@ $userId =$user->get_id($_SESSION["email"]);
     exit();
 
 }
-

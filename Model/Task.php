@@ -1,3 +1,4 @@
+
 <?php
 class Task {
     private $conn;
@@ -8,9 +9,9 @@ class Task {
     }
 
     // Create a new task
-    public function createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline) {
-        $sql = "INSERT INTO {$this->table} (user_id, title, description, status,priority, category_id,  deadline) 
-                VALUES (:user_id, :title, :description,:status, :priority, :category_id,  :deadline)";
+    public function createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId) {
+        $sql = "INSERT INTO {$this->table} (user_id, title, description, status,priority, category_id,  deadline, project_id) 
+                VALUES (:user_id, :title, :description,:status, :priority, :category_id,  :deadline, :project_id)";
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindParam(':user_id', $userId);
@@ -20,11 +21,13 @@ class Task {
         $stmt->bindParam(':status',$status);
         $stmt->bindParam(':priority', $priority);
         $stmt->bindParam(':deadline', $deadline);
+        $stmt->bindParam(':project_id', $projectId);
+
 
         return $stmt->execute();
     }
 
-    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline) {
+    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId) {
         $sql = "UPDATE tasks SET 
                 title = :title, 
                 description = :description, 
@@ -32,6 +35,7 @@ class Task {
                 priority = :priority, 
                 status = :status, 
                 deadline = :deadline 
+                project_id = :project_id 
                 WHERE id = :taskId";
         $stmt = $this->conn->prepare($sql);
 
@@ -41,6 +45,7 @@ class Task {
         $stmt->bindParam(':priority', $priority);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':deadline', $deadline);
+        $stmt->bindParam(':project_id', $projectId);
         $stmt->bindParam(':taskId', $taskId);
 
         return $stmt->execute();
@@ -115,4 +120,14 @@ class Task {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getTasksByProjectId($projectId) {
+        $query = "SELECT id, title, description, category_id, priority, status, deadline, project_id 
+                  FROM tasks WHERE project_id = :project_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $projectId);
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

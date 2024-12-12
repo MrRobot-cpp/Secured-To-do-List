@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const priorityFilter = document.getElementById('priority-filter');
@@ -52,10 +51,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         columnElement.appendChild(form);
 
+        // Get project_id from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('project_id'); // This should be the correct query parameter
+
+        if (!projectId) {
+            alert('Project ID is missing.');
+            return;
+        }
+
         form.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            //formData.append('user_id', userId);  // Use the userId variable defined in HTML
+
+            // Add project_id and status to the FormData
+            formData.append('project_id', projectId);
             formData.append('status', columnElement.getAttribute('data-priority'));
 
             fetch('../Controller/TaskController.php', {
@@ -81,60 +91,39 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('Fetch error:', error);
             });
-            
-        //     fetch('Controller/TaskController.php', {
-        //         method: 'POST',
-        //         body: formData
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.success) {
-        //             location.reload();
-        //         } else {
-        //             alert('Failed to add task: ' + data.message);
-        //         }
-        //     })
-        //     .catch(error => console.error('Error:', error));
-         });
+        });
 
         form.querySelector('.cancel-btn').addEventListener('click', function() {
             form.remove();
         });
     }
-//theme toggle
-const themeToggleButton = document.getElementById('theme-toggle-button');
-const themeDropdownContainer = document.getElementById('theme-dropdown-container');
-const themeOptions = document.querySelectorAll('.theme-option');
 
-if (themeToggleButton && themeDropdownContainer) {
-    themeToggleButton.addEventListener('click', function (event) {
-        event.stopPropagation();
-        themeDropdownContainer.classList.toggle('visible');
-        themeDropdownContainer.classList.toggle('hidden');
-    });
+    // Theme toggle (unchanged)
+    const themeToggleButton = document.getElementById('theme-toggle-button');
+    const themeDropdownContainer = document.getElementById('theme-dropdown-container');
+    const themeOptions = document.querySelectorAll('.theme-option');
 
-    themeOptions.forEach(option => {
-        option.addEventListener('click', function () {
-            const theme = option.getAttribute('data-theme');
-            document.body.className = theme;
-            themeDropdownContainer.classList.add('hidden');
-            themeDropdownContainer.classList.remove('visible');
+    if (themeToggleButton && themeDropdownContainer) {
+        themeToggleButton.addEventListener('click', function (event) {
+            event.stopPropagation();
+            themeDropdownContainer.classList.toggle('visible');
+            themeDropdownContainer.classList.toggle('hidden');
         });
-    });
 
-    document.addEventListener('click', function (event) {
-        if (!themeToggleButton.contains(event.target) && !themeDropdownContainer.contains(event.target)) {
-            themeDropdownContainer.classList.add('hidden');
-            themeDropdownContainer.classList.remove('visible');
-        }
-    });
-}//end theme toggle
+        themeOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                const theme = option.getAttribute('data-theme');
+                document.body.className = theme;
+                themeDropdownContainer.classList.add('hidden');
+                themeDropdownContainer.classList.remove('visible');
+            });
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!themeToggleButton.contains(event.target) && !themeDropdownContainer.contains(event.target)) {
+                themeDropdownContainer.classList.add('hidden');
+                themeDropdownContainer.classList.remove('visible');
+            }
+        });
+    }
 });
-
-
-
-
-
-
-
-

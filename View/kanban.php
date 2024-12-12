@@ -1,15 +1,13 @@
+
 <?php
 // Start the session and include necessary files.
 session_start();
 require_once '../Model/Database.php';
+require_once '../Controller/ProjectController.php';
 require_once '../Controller/TaskController.php';
 require_once '../Controller/UserController.php';
 
-// Ensure the user is logged in.
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+
 
 // Create a new database connection and controllers.
 $db = (new Database())->getConnection();
@@ -20,16 +18,21 @@ $taskController = new TaskController($db);
 $user = $userController->getUserById($_SESSION['user_id']);
 $name = $user['name'] ?? 'User';
 $usertypes_id = $user['usertypes_id'] ?? null;  // Fetch usertypes_id
+// Get the project_id from the query string
+$projectId = isset($_GET['project_id']) ? intval($_GET['project_id']) : null;
 
-// Check if usertypes_id is 1 (admin), otherwise redirect to kanban.php.
+
+
+// Fetch tasks for the specific project
+$tasks = $taskController->getTasksByProjectId($projectId);
+if ($usertypes_id != 1&&!$projectId) {
+    header("Location: projects.php");
+    exit();
+}
 if ($usertypes_id != 2) {
     header("Location: adminDashboard.php");
     exit();
 }
-
-
-// Retrieve all tasks for the user.
-$tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +44,7 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
     <link rel="stylesheet" href="../public/assets/css/kanban.css">
 </head>
 <body>
-    
+<?php echo $projectId?>
     <div class="container">
         <!-- Vertical Navbar -->
         <aside class="navbar">
@@ -105,6 +108,8 @@ $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
                 <option value="normal">Normal</option>
             </select>
             <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+            <input type="hidden" name="project_id" value="<?php echo $projectId?>">
+
             <button type="submit" name="add_task">Add Task</button>
             <button type="button" id="task-form-cancel">Cancel</button>
         </form>

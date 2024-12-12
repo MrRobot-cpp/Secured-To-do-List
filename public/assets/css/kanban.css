@@ -12,9 +12,7 @@
     --button:#555;
     --button-hover:#777;
 
-  }
-  
-  /* Monochrome */
+  }/* Monochrome */
   .monochrome-theme {
     --primary-bg: #d9cec5;
     --primary-text: #37322c;
@@ -28,9 +26,7 @@
   --black:#111111;
     --button:#555;
     --button-hover:#777;
-  }
-  
-  /* Forest */
+  } /* Forest */
   .forest-theme {
     --primary-text: #0e0906b6;
     --accent:  #7d957a;
@@ -258,3 +254,123 @@ body {
     display: block;
 }
 /*end theme toggle*/
+/*projects*/
+.project-board {
+    flex: 1;
+    padding: 20px;
+}
+
+.project {
+
+    border: 1px solid var(--extra);
+    padding: 10px;
+    margin: 10px;
+    background-color: var(--card-bg);
+    border-radius: 5px;
+    
+}
+
+.project h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.project p {
+    margin: 5px 0;
+}
+
+.add-task-btn, #new-project-btn {
+    background-color: var(--accent);
+    color: var(--black);
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.add-task-btn:hover ,#new-project-btn:hover{
+    background-color:var(--accent-dark);
+}
+
+#project-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--primary-text);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    z-index: 100;
+    color: var(--card-bg);
+}
+
+
+
+#project-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+#project-form input[type="text"],
+#project-form textarea,
+#project-form select {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--card-bg);
+    color: var(--primary-text);
+    font-size: 16px;
+}
+
+#project-form button {
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+#project-form button[type="submit"] {
+    background-color: var(--accent);
+    color: var(--black);
+    margin-bottom: 10px;
+}
+
+#project-form button[type="button"] {
+    background-color: var(--button);
+    color: var(--card-bg);
+}
+
+#project-form button[type="button"]:hover {
+    background-color: var(--button-hover);
+}
+
+.project-columns {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-column {
+    width: calc(33.33% - 20px);  
+
+    background-color: var(--card-bg);
+    padding: 10px;
+    border-radius: 8px;
+    width: 30%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    color: var(--black);
+}
+
+.project-column h2 {
+    margin-top: 0;
+    color: var(--primary-text);
+    border-bottom: 2px solid;
+    padding-bottom: 10px;
+}
