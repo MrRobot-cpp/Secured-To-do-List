@@ -387,3 +387,28 @@ body {
     border-bottom: 2px solid;
     padding-bottom: 10px;
 }
+#searchResults {
+    width: 100%;
+    min-height: 100px;
+    padding: 3px;
+    border: 1px solid #ddd;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    display: none;
+}
+.search-btn, .cancel-search-btn {
+    background-color: var(--accent);
+    color: var(--black);
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 18%; 
+    margin: 0 2px;
+    width: auto; 
+}
+
+.search-btn:hover, .cancel-search-btn:hover {
+    background-color: var(--accent-dark);
+}

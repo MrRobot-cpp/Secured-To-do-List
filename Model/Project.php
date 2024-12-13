@@ -98,5 +98,13 @@ class Project {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
  
-        
+    public function searchProjects($userId, $searchTerm) {
+        $stmt = $this->conn->prepare("SELECT * FROM projects WHERE user_id = :user_id AND name LIKE :search_term");
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindValue(':search_term', '%' . $searchTerm . '%'); 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+   
 }

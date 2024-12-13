@@ -44,8 +44,31 @@ class ProjectController {
     public function getProjectsByUserId($userId) {
         return $this->projectModel->getProjectsByUserId($userId);
     }
-    
+
+public function searchProjects($userId, $searchTerm) {
+    return $this->projectModel->searchProjects($userId, $searchTerm);
 }
+
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_project'])) {
+    session_start();
+    require_once '../Model/Database.php';
+    require_once '../Model/Project.php';
+
+    $db = (new Database())->getConnection();
+    $projectModel = new Project($db);
+
+    $userId = $_POST['user_id'] ?? 0;
+    $searchTerm = $_POST['search_term'] ?? '';
+
+    if (!empty($searchTerm) && $userId > 0) {
+            $searchResults = $projectModel->searchProjects($userId, $searchTerm);
+            echo json_encode($searchResults); 
+    }
+    exit();
+}
+
 
 // Handle the POST request for adding a new project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_project'])) {
@@ -83,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     $projectId = $_POST['project_id'] ?? 0;
     $userId = $_POST['user_id'] ?? 0;
     $name = $_POST['name'] ?? '';
-    
+
     if (!empty($name) && $userId > 0 && $projectId > 0) {
         $result = $projectController->updateProject($projectId, $name);
         if ($result) {
