@@ -156,6 +156,15 @@ document.querySelectorAll('.progress').forEach(progress => {
 });
 
 //theme toggle
+// Apply saved theme from localStorage when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.className = savedTheme; // Apply the saved theme
+    }
+});
+
+// Theme toggle logic 
 const themeToggleButton = document.getElementById('theme-toggle-button');
 const themeDropdownContainer = document.getElementById('theme-dropdown-container');
 const themeOptions = document.querySelectorAll('.theme-option');
@@ -170,7 +179,8 @@ if (themeToggleButton && themeDropdownContainer) {
     themeOptions.forEach(option => {
         option.addEventListener('click', function () {
             const theme = option.getAttribute('data-theme');
-            document.body.className = theme;
+            document.body.className = theme; // Change the theme
+            localStorage.setItem('theme', theme); // Save the theme to localStorage
             themeDropdownContainer.classList.add('hidden');
             themeDropdownContainer.classList.remove('visible');
         });
@@ -182,7 +192,8 @@ if (themeToggleButton && themeDropdownContainer) {
             themeDropdownContainer.classList.remove('visible');
         }
     });
-}//end theme toggle
+}
+//end theme toggle
 
 
 

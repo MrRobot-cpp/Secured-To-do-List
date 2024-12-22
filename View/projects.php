@@ -112,28 +112,17 @@ $projects = $projectController->getProjectsByUserId($_SESSION['user_id']);
 
     <!-- JavaScript -->
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const newProjectButton = document.getElementById('new-project-btn');
-    const projectFormContainer = document.getElementById('project-form');
-    const projectCancelButton = document.getElementById('project-form-cancel');
-    const updateFormContainer = document.getElementById('update-form');
-    const updateCancelButton = document.getElementById('update-form-cancel');
-    const themeToggleButton = document.getElementById('theme-toggle-button');
-    const themeDropdownContainer = document.getElementById('theme-dropdown-container');
-    const themeOptions = document.querySelectorAll('.theme-option');
-    
-    // Show the New Project Form
-    newProjectButton.addEventListener('click', function() {
-        projectFormContainer.style.display = 'block';
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const themeToggleButton = document.getElementById('theme-toggle-button');
+        const themeDropdownContainer = document.getElementById('theme-dropdown-container');
+        const themeOptions = document.querySelectorAll('.theme-option');
+        
+        // Apply the saved theme from localStorage if it exists
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.body.className = savedTheme; // Apply saved theme on page load
+        }
 
-    // Hide the New Project Form
-    projectCancelButton.addEventListener('click', function() {
-        projectFormContainer.style.display = 'none';
-    });
-
-    // Handle Theme Toggle
-    if (themeToggleButton && themeDropdownContainer) {
         themeToggleButton.addEventListener('click', function(event) {
             event.stopPropagation();
             themeDropdownContainer.classList.toggle('visible');
@@ -143,130 +132,148 @@ document.addEventListener('DOMContentLoaded', function() {
         themeOptions.forEach(option => {
             option.addEventListener('click', function() {
                 const theme = option.getAttribute('data-theme');
-                document.body.className = theme;
+                document.body.className = theme;  // Apply the theme to body
+
+                // Save the selected theme to localStorage
+                localStorage.setItem('theme', theme);
+
                 themeDropdownContainer.classList.add('hidden');
                 themeDropdownContainer.classList.remove('visible');
             });
         });
 
+        // Close theme dropdown when clicking outside
         document.addEventListener('click', function(event) {
             if (!themeToggleButton.contains(event.target) && !themeDropdownContainer.contains(event.target)) {
                 themeDropdownContainer.classList.add('hidden');
                 themeDropdownContainer.classList.remove('visible');
             }
         });
-    }
 
-    // Handle Search Form Submission
-    document.getElementById('searchForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const searchTerm = document.getElementById('search-bar').value;
-        const userId = document.querySelector('[name="user_id"]').value;
-        
-        const formData = new FormData();
-        formData.append('user_id', userId);
-        formData.append('search_term', searchTerm);
-        formData.append('search_project', true);
-        
-        fetch('../Controller/ProjectController.php', {  
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            const searchResultsContainer = document.getElementById('searchResults');
-            searchResultsContainer.style.display = 'block';
-            if (data.error) {
-                searchResultsContainer.innerHTML = `<p>${data.error}</p>`;
-            } else {
-                let resultsHtml = '';
-                data.forEach(project => {
-                    resultsHtml += `
-                        <div class="project-column" data-id="${project.id}">
-                            <h3>${project.name}</h3>
-                            <button class="add-task-btn" data-project-id="${project.id}">Add Task</button>
-                            <button class="update-btn" data-project-id="${project.id}">Update</button>
-                            <button class="delete-btn" data-project-id="${project.id}">Delete</button>
-                        </div>
-                    `;
-                });
-                searchResultsContainer.innerHTML = resultsHtml;
-                bindButtons();
-            }
-        })
-        .catch(error => {
-            document.getElementById('searchResults').innerHTML = `<p>Error occurred while searching. Please try again.</p>`;
-            console.error(error);
-        });
-    });
+        const newProjectButton = document.getElementById('new-project-btn');
+        const projectFormContainer = document.getElementById('project-form');
+        const projectCancelButton = document.getElementById('project-form-cancel');
+        const updateFormContainer = document.getElementById('update-form');
+        const updateCancelButton = document.getElementById('update-form-cancel');
 
-    document.getElementById('cancel-search-btn').addEventListener('click', function() {
-        document.getElementById('search-bar').value = '';
-        document.getElementById('searchResults').style.display = 'none';
-    });
-
-    function bindButtons() {
-        const addTaskButtons = document.querySelectorAll('.add-task-btn');
-        const updateButtons = document.querySelectorAll('.update-btn');
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        
-
-        addTaskButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const projectId = button.getAttribute('data-project-id')
-                window.location.href = `../view/kanban.php?project_id=${projectId}`;
-            });
+        // Show the New Project Form
+        newProjectButton.addEventListener('click', function() {
+            projectFormContainer.style.display = 'block';
         });
 
-        // Show the Update Project Form
-        updateButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const projectId = button.getAttribute('data-project-id');
-                const projectName = button.closest('.project-column').querySelector('h3').innerText;
-                document.getElementById('update_project_id').value = projectId;
-                document.getElementById('update_project_name').value = projectName;
-                updateFormContainer.style.display = 'block';
-            });
+        // Hide the New Project Form
+        projectCancelButton.addEventListener('click', function() {
+            projectFormContainer.style.display = 'none';
         });
 
-        // Delete Project
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const projectId = button.getAttribute('data-project-id');
-                const confirmation = confirm("Are you sure you want to delete this project?");
-                
-                if (confirmation) {
-                    fetch('../Controller/ProjectController.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: `delete_project=true&project_id=${projectId}`
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        if (data === 'success') {
-                            alert("Project deleted successfully!");
-                            const projectColumn = button.closest('.project-column');
-                            if (projectColumn) {
-                                projectColumn.remove();
-                            }
-                        } else {
-                            alert("Failed to delete project.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert("An error occurred. Please try again.");
+        // Handle Search Form Submission
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const searchTerm = document.getElementById('search-bar').value;
+            const userId = document.querySelector('[name="user_id"]').value;
+            
+            const formData = new FormData();
+            formData.append('user_id', userId);
+            formData.append('search_term', searchTerm);
+            formData.append('search_project', true);
+            
+            fetch('../Controller/ProjectController.php', {  
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const searchResultsContainer = document.getElementById('searchResults');
+                searchResultsContainer.style.display = 'block';
+                if (data.error) {
+                    searchResultsContainer.innerHTML = `<p>${data.error}</p>`;
+                } else {
+                    let resultsHtml = '';
+                    data.forEach(project => {
+                        resultsHtml += `
+                            <div class="project-column" data-id="${project.id}">
+                                <h3>${project.name}</h3>
+                                <button class="add-task-btn" data-project-id="${project.id}">Add Task</button>
+                                <button class="update-btn" data-project-id="${project.id}">Update</button>
+                                <button class="delete-btn" data-project-id="${project.id}">Delete</button>
+                            </div>
+                        `;
                     });
+                    searchResultsContainer.innerHTML = resultsHtml;
+                    bindButtons();
                 }
+            })
+            .catch(error => {
+                document.getElementById('searchResults').innerHTML = `<p>Error occurred while searching. Please try again.</p>`;
+                console.error(error);
             });
         });
-    }
-    bindButtons();
-});
 
-</script>
+        document.getElementById('cancel-search-btn').addEventListener('click', function() {
+            document.getElementById('search-bar').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+        });
+
+        function bindButtons() {
+            const addTaskButtons = document.querySelectorAll('.add-task-btn');
+            const updateButtons = document.querySelectorAll('.update-btn');
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+
+            addTaskButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const projectId = button.getAttribute('data-project-id');
+                    window.location.href = `../view/kanban.php?project_id=${projectId}`;
+                });
+            });
+
+            // Show the Update Project Form
+            updateButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const projectId = button.getAttribute('data-project-id');
+                    const projectName = button.closest('.project-column').querySelector('h3').innerText;
+                    document.getElementById('update_project_id').value = projectId;
+                    document.getElementById('update_project_name').value = projectName;
+                    updateFormContainer.style.display = 'block';
+                });
+            });
+
+            // Delete Project
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const projectId = button.getAttribute('data-project-id');
+                    const confirmation = confirm("Are you sure you want to delete this project?");
+                    
+                    if (confirmation) {
+                        fetch('../Controller/ProjectController.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `delete_project=true&project_id=${projectId}`
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data === 'success') {
+                                alert("Project deleted successfully!");
+                                const projectColumn = button.closest('.project-column');
+                                if (projectColumn) {
+                                    projectColumn.remove();
+                                }
+                            } else {
+                                alert("Failed to delete project.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("An error occurred. Please try again.");
+                        });
+                    }
+                });
+            });
+        }
+        bindButtons();
+    });
+    </script>
 </body>
 </html>

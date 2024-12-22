@@ -261,11 +261,18 @@ foreach ($users as $userRow) {
 
 <script>
 //theme toggle
+// Theme toggle
 const themeToggleButton = document.getElementById('theme-toggle-button');
 const themeDropdownContainer = document.getElementById('theme-dropdown-container');
 const themeOptions = document.querySelectorAll('.theme-option');
 
 if (themeToggleButton && themeDropdownContainer) {
+    // Check if a theme is saved in localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.className = savedTheme; // Apply the saved theme
+    }
+
     themeToggleButton.addEventListener('click', function (event) {
         event.stopPropagation();
         themeDropdownContainer.classList.toggle('visible');
@@ -275,7 +282,8 @@ if (themeToggleButton && themeDropdownContainer) {
     themeOptions.forEach(option => {
         option.addEventListener('click', function () {
             const theme = option.getAttribute('data-theme');
-            document.body.className = theme;
+            document.body.className = theme; // Change the theme
+            localStorage.setItem('theme', theme); // Save the theme to localStorage
             themeDropdownContainer.classList.add('hidden');
             themeDropdownContainer.classList.remove('visible');
         });
@@ -287,7 +295,8 @@ if (themeToggleButton && themeDropdownContainer) {
             themeDropdownContainer.classList.remove('visible');
         }
     });
-}//end theme toggle
+}
+//end theme toggle
 
 
 
