@@ -129,7 +129,7 @@ foreach ($users as $userRow) {
                         <span>Manage Users</span>
                     </a>
                 </li>
-             
+         
               
             </ul>
             <div class="sidebar-footer">
@@ -223,7 +223,7 @@ foreach ($users as $userRow) {
         </div>
 
         <!-- User Cards -->
-        <div class="row" class="user-cards-container">
+        <div class="row" id="user-cards-container">
     <?php foreach ($userData as $user): ?>
         <div class="col-md-4 mb-3">
             <div class="card user-card">

@@ -425,7 +425,7 @@ color: var(--so-extra);}
   display: block;
 }
 /* users cards*/
-.user-cards-container{
+.user-cards-container, #user-cards-container{
   width: 100%;
   display: flex;
   flex-wrap: wrap;
