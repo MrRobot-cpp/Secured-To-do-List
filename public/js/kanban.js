@@ -97,12 +97,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Theme toggle (unchanged)
+    // Theme toggle 
     const themeToggleButton = document.getElementById('theme-toggle-button');
     const themeDropdownContainer = document.getElementById('theme-dropdown-container');
     const themeOptions = document.querySelectorAll('.theme-option');
 
     if (themeToggleButton && themeDropdownContainer) {
+        // Apply the saved theme from localStorage if it exists
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.body.className = savedTheme; // Apply saved theme on page load
+        }
+
         themeToggleButton.addEventListener('click', function (event) {
             event.stopPropagation();
             themeDropdownContainer.classList.toggle('visible');
@@ -112,7 +118,11 @@ document.addEventListener('DOMContentLoaded', function() {
         themeOptions.forEach(option => {
             option.addEventListener('click', function () {
                 const theme = option.getAttribute('data-theme');
-                document.body.className = theme;
+                document.body.className = theme;  // Apply the theme to body
+
+                // Save the selected theme to localStorage
+                localStorage.setItem('theme', theme);
+
                 themeDropdownContainer.classList.add('hidden');
                 themeDropdownContainer.classList.remove('visible');
             });
@@ -126,3 +136,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+

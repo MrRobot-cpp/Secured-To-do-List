@@ -1,3 +1,4 @@
+
 <?php
 require_once '../Model/Project.php';
 require_once 'UserController.php';
@@ -47,6 +48,9 @@ class ProjectController {
 
 public function searchProjects($userId, $searchTerm) {
     return $this->projectModel->searchProjects($userId, $searchTerm);
+}
+public function countProjectsByUserId($userId){
+    return $this->projectModel-> countProjectsByUserId($userId);
 }
 
 }
@@ -139,4 +143,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project']) && 
         echo 'failure'; 
     }
 }
-

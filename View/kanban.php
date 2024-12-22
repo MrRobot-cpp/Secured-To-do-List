@@ -119,8 +119,8 @@ if ($usertypes_id != 2) {
     <div class="theme-selector hidden" id="theme-dropdown-container">
         <ul>
             <li class="theme-option" data-theme="">Default</li>
-            <li class="theme-option" data-theme="monochrome-theme">Monochrome</li>
-            <li class="theme-option" data-theme="forest-theme">Forest</li>
+            <li class="theme-option" data-theme="monochrome-theme">Blue</li>
+            <li class="theme-option" data-theme="forest-theme">Green</li>
         </ul>
     </div>
            <!--end theme toggle-->

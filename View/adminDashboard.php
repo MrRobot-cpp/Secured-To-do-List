@@ -4,6 +4,8 @@ session_start();
 require_once '../Model/Database.php';
 require_once '../Controller/TaskController.php';
 require_once '../Controller/UserController.php';
+require_once '../Controller/ProjectController.php';
+
 
 // Ensure the user is logged in.
 if (!isset($_SESSION['user_id'])) {
@@ -15,6 +17,8 @@ if (!isset($_SESSION['user_id'])) {
 $db = (new Database())->getConnection();
 $userController = new UserController($db);
 $taskController = new TaskController($db);
+$projectController = new ProjectController($db);
+
 
 
 // Retrieve user data, including the usertypes_id.
@@ -24,6 +28,8 @@ $name = $user['name'] ?? 'User';
 
 // Retrieve all tasks for the user.
 $tasks = $taskController->getAllTasksByUser($_SESSION['user_id']);
+$projects = $projectController->countProjectsByUserId($_SESSION['user_id']);
+
 //    STARTT    //
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     session_unset();  // Unset all session variables
@@ -63,14 +69,14 @@ foreach ($users as $userRow) {
     // Get task counts for each user
     $taskCounts = $taskController->getTaskCountsByUser($userRow['id']);
     
-    // Add user and task counts to the array
     $userData[] = [
-        'name' => $userRow['name'],
-        'done' => $taskCounts['done'],
-
-        'to_do' => $taskCounts['to_do'],
-        'in_progress' => $taskCounts['in_progress']
-    ];
+      'name' => $userRow['name'],
+      'id' => $userRow['id'],
+      'done' => $taskCounts['done'],
+      'to_do' => $taskCounts['to_do'],
+      'in_progress' => $taskCounts['in_progress']
+  ];
+  
 }
 ?>
 <!DOCTYPE html>
@@ -123,12 +129,7 @@ foreach ($users as $userRow) {
                         <span>Manage Users</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#active" class="sidebar-link">
-                    <i class="material-icons-outlined">bar_chart</i>
-                    <span>User Activity</span>
-                    </a>
-                </li>
+             
               
             </ul>
             <div class="sidebar-footer">
@@ -146,8 +147,8 @@ foreach ($users as $userRow) {
     <div class="theme-selector hidden" id="theme-dropdown-container">
         <ul>
             <li class="theme-option" data-theme="">Default</li>
-            <li class="theme-option" data-theme="monochrome-theme">Monochrome</li>
-            <li class="theme-option" data-theme="forest-theme">Forest</li>
+            <li class="theme-option" data-theme="monochrome-theme">Blue</li>
+            <li class="theme-option" data-theme="forest-theme">Green</li>
         </ul>
     </div>
             </nav>
@@ -206,73 +207,46 @@ foreach ($users as $userRow) {
                                   <h2 class="chart-title">Task Status</h2>
                                   <div id="pie-chart"></div>
                                   </div>
-                              <div class="charts-card-tasks" id="completion">
-                                  <h2 class="chart-title">Task Completion Over Weeks</h2>
-                                  <div id="line-chart-tasks"></div>
-                              </div>
+                                  <div class="charts-card" id="top">
+                            <h2 class="chart-title">Top 5 Users</h2>
+                            <div id="bar-chart-top-users"></div>
+                        </div>
                 </div>
                     </div>
 
                  <!--------MANAGE USERS TABLE------->
                  <h3 class="fw-bold fs-4 my-3" id="manage">Manage Users</h3>
-<div class="row">
-    <div class="filter">
-        <label for="user-status-filter">Filter by status:</label>
-        <select id="user-status-filter">
-            <option value="all">All Users</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-        </select>
-    </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" id="user-search" class="form-control" placeholder="Search user by name">
+            </div>
+        </div>
 
-    <div class="col-12">
-    <table class="table table-striped">
-    <thead>
-                                    <tr class="highlight">
-                                        <th scope="col">Name</th>
-                                        
-                                        <th scope="col" colspan="3" class="text-center">Tasks</th>
-                                    </tr>
-                                    <tr class="highlight">
-                                        <th></th>
-
-                                        <th>Complete</th>
-                                        <th>Overdue</th>
-                                        <th>In Progress</th>
-
-                                    </tr>
-                                </thead>
-        <tbody>
-            
-            <?php foreach ($userData as $user): ?>
-                <tr>
-                    <th scope="row"><?php echo ($user['name']); ?></th>
-
-                    <td class="text-center"><?php echo ($user['done']); ?></td>
-                    <td class="text-center"><?php echo ($user['to_do']); ?></td>
-                    <td class="text-center"><?php echo ($user['in_progress']); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+        <!-- User Cards -->
+        <div class="row" class="user-cards-container">
+    <?php foreach ($userData as $user): ?>
+        <div class="col-md-4 mb-3">
+            <div class="card user-card">
+                <div class="card-inner">
+                    <h5 class="card-title text-center fw-bold">
+                        <?php echo htmlspecialchars($user['name']); ?>
+                    </h5>
+                    <div class="text-center">
+                        <p><strong>Projects:</strong> 
+                           <?php echo htmlspecialchars($projectController->countProjectsByUserId($user['id'])); ?>
+                        </p>
+                        <a href="user_projects.php?user_id=<?php echo $user['id']; ?>" class="btn btn-primary mt-2">
+                            View More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
 </div>
 
-                     <!-----USER ACTIVITY CHARTS----->
-                <h3 class="fw-bold fs-4 my-3"id="active">User Activity
-                </h3>
-                <div class="row" >
-                    <div class="charts">
-                    
-                        <div class="charts-card" id="growth">
-                            <h2 class="chart-title">User Growth</h2>
-                            <div id="bar-chart-growth"></div>
-                        </div>
-                        <div class="charts-card" id="top">
-                            <h2 class="chart-title">Top 5 Users</h2>
-                            <div id="bar-chart-top-users"></div>
-                        </div>
-                    </div>
-            </div>
+
+         
             </main>
             <footer class="footer">
 
@@ -338,7 +312,7 @@ document.querySelectorAll('.progress').forEach(progress => {
 //PIE CHART
  
 const pieChartOptions = {
-  series: [<?php echo $doneCount?>, <?php echo $inProgressCount?>, <?php echo $toDoCount ?>],
+  series: [11, 12, 20],
   chart: {
     type: 'pie',
     background: 'transparent',
@@ -364,63 +338,7 @@ const pieChart = new ApexCharts(document.querySelector('#pie-chart'), pieChartOp
 pieChart.render();
 
 
-//BAR CHART(growth)
-const barChartGrowthOptions = {
-  series: [{
-    name: 'New Users',
-    data: [<?php echo $totalUsers?>, 30, 25, 40, 35, 45, 50]
-  }],
-  chart: {
-    type: 'bar',
-    height: 350,
-    background: 'transparent'
-  },
-  colors: ['var(--accent)'],
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '50%',
-      borderRadius: 4
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  xaxis: {
-    categories: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
-    labels: {
-      style: {
-        colors: 'var(--primary-text)'
-      }
-    },
-    axisBorder: { color: 'var(--primary-text)' }
-  },
-  yaxis: {
-    title: {
-      text: 'New Users',
-      style: { color: 'var(--primary-text)' }
-    },
-    labels: {
-      style: { colors: 'var(--primary-text)' }
-    }
-  },
-  grid: { borderColor: 'var(--primary-text)' },
-  legend: {
-    labels: {
-      colors: 'var(--primary-text)'
-    },
-    show: true,
-    position: 'top'
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-    theme: 'dark'
-  }
-};
 
-const barChartGrowth = new ApexCharts(document.querySelector('#bar-chart-growth'), barChartGrowthOptions);
-barChartGrowth.render();
 
 
 
@@ -465,61 +383,7 @@ const barChartTopUsersOptions = {
 
 const barChartTopUsers = new ApexCharts(document.querySelector('#bar-chart-top-users'), barChartTopUsersOptions);
 barChartTopUsers.render();
-//LINE CHART
-   // Update Line Chart
-   const lineChartTasks = {
-    series: [
-      {
-        name: 'Tasks Completed',
-        data: [<?php echo $doneCount?>, 20, 15, 30, 25, 40, 35], // Use real data for other weeks if available
-      },
-    ],
-    chart: {
-      type: 'line',
-      background: 'transparent',
-      height: 350,
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ['var(--accent)'],
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 4,
-    },
-    xaxis: {
-      categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'],
-      labels: {
-        style: {
-          colors: 'var(--primary-text)',
-        },
-      },
-    },
-    yaxis: {
-      title: {
-        text: 'Tasks Completed',
-        style: {
-          color: 'var(--primary-text)',
-        },
-      },
-      labels: {
-        style: {
-          colors: 'var(--primary-text)',
-        },
-      },
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      theme: 'dark',
-    },
-  };
 
-  const lineTasks = new ApexCharts(document.querySelector('#line-chart-tasks'), lineChartTasks);
-  lineTasks.render();
 //USER STATUS
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -533,6 +397,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
   );
+  //search users 
+const userSearchInput = document.getElementById('user-search');
+const userCardsContainer = document.getElementById('user-cards-container');
+const userCards = Array.from(userCardsContainer.getElementsByClassName('user-card'));
+
+userSearchInput.addEventListener('input', function () {
+    const searchTerm = this.value.toLowerCase();
+
+    userCards.forEach(card => {
+        const userName = card.querySelector('.card-title').textContent.toLowerCase();
+        if (userName.includes(searchTerm)) {
+            card.parentElement.style.display = 'block';
+        } else {
+            card.parentElement.style.display = 'none';
+        }
+    });
+});
 
 </script>
 

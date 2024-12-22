@@ -14,15 +14,15 @@
 
   }/* Monochrome */
   .monochrome-theme {
-    --primary-bg: #d9cec5;
-    --primary-text: #37322c;
-    --accent: #8c7764;
-    --card-bg: #d9c6b0;
-    --progress-bg: #000000b3;
-    --sidebar-bg: #442d1c;
-    --sidebar-text: #d9cec5;
-    --extra:#d5c5b7;
-  --accent-dark: #554638; 
+    --primary-bg: #ececef;
+  --primary-text: #949597;
+  --accent: #373b4d;
+  --card-bg: #d4d6cb;
+  --progress-bg: #000000b3;
+  --sidebar-bg: #949597;
+  --sidebar-text: #ececef;
+  --extra:#bdbfb7;
+  --accent-dark:#2c2f3d; 
   --black:#111111;
     --button:#555;
     --button-hover:#777;

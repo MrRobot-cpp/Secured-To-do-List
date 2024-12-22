@@ -1,3 +1,4 @@
+
 <?php
 class Project {
     private $conn;
@@ -104,6 +105,16 @@ class Project {
         $stmt->bindValue(':search_term', '%' . $searchTerm . '%'); 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function countProjectsByUserId($userId) {
+        $sql = "SELECT COUNT(*) as project_count FROM {$this->table} WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['project_count'];
     }
     
    

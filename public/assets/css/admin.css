@@ -10,6 +10,8 @@
   --extra:#dad5d5;
   --extra-extra:#e0e0e0;
   --so-extra:#5e5c5cc7;
+  --accent-dark: #d9a856; /* Accent color */
+
 }
 /*forest*/
 .forest-theme {
@@ -19,10 +21,12 @@
   --card-bg: #f7f8e5;
   --progress-bg: #368439b3;
   --sidebar-bg: #232d23;
-  --sidebar-text: #9e786490;
-  --extra:#a26f5390;
-  --extra-extra:#9e786490;
-  --so-extra:#9e786490;
+  --sidebar-text: #ffffff; /* Sidebar text */
+  --extra:#dad5d5;
+  --extra-extra:#e0e0e0;
+  --so-extra:#5e5c5cc7;
+  --accent-dark: #6c8069;
+
 }
 /* High Contrast Theme 
 .high-contrast-theme {
@@ -40,16 +44,18 @@
 
 /* monochrome */
 .monochrome-theme {
-  --primary-bg: #d9cec5;
-  --primary-text: #37322c;
-  --accent: #8c7764;
-  --card-bg: #d9c6b0;
-  --progress-bg: #000000b3;
-  --sidebar-bg: #442d1c;
-  --sidebar-text: #d9cec5;
-  --extra:#d5c5b7;
-  --extra-extra:#ebe2d0;
-  --so-extra:#e8e6e5;
+  --primary-bg: #ececef;
+  --primary-text: #949597;
+  --accent: #373b4d;
+  --card-bg: #bdbfb7;
+  --progress-bg: #368439b3;
+  --sidebar-bg: #949597;
+  --sidebar-text: #ececef;
+  --extra:#eef0eb;
+  --extra-extra:#ececef;
+  --so-extra:#ececef;
+  --accent-dark:#2c2f3d; 
+
 }
 
 
@@ -417,4 +423,55 @@ color: var(--so-extra);}
 
 .visible {
   display: block;
+}
+/* users cards*/
+.user-cards-container{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.user-card {
+  display: flex;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.user-card p ,.user-card h5{
+  color: var(--extra);
+}
+
+
+.new-card{
+  display: flex;
+  width: 30%;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1%;
+}
+.new-card:nth-child(odd) {
+  background-color:var(--primary-text);
+}
+
+.new-card:nth-child(even) {
+  background-color: var(--accent);
+}
+.btn{
+  background-color: var(--accent);
+  color: var(--primary-text);
+  text-align: center;
+  cursor: pointer;
+  width: 70%;
+  margin: 5px;
+}
+#task-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2% 0%;
+}
+.chart{
+  padding: 2% 15%; 
 }

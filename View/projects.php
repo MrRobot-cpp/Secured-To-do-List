@@ -104,8 +104,8 @@ $projects = $projectController->getProjectsByUserId($_SESSION['user_id']);
         <div class="theme-selector hidden" id="theme-dropdown-container">
             <ul>
                 <li class="theme-option" data-theme="">Default</li>
-                <li class="theme-option" data-theme="monochrome-theme">Monochrome</li>
-                <li class="theme-option" data-theme="forest-theme">Forest</li>
+                <li class="theme-option" data-theme="monochrome-theme">Blue</li>
+                <li class="theme-option" data-theme="forest-theme">Green</li>
             </ul>
         </div>
     </div>
