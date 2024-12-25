@@ -1,4 +1,3 @@
-
 <?php
 class Task {
     private $conn;
@@ -10,7 +9,7 @@ class Task {
 
     // Create a new task
     public function createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId) {
-        $sql = "INSERT INTO {$this->table} (user_id, title, description, status,priority, category_id,  deadline, project_id) 
+        $sql = "INSERT INTO {$this->table} (user_id, title, description, status,priority, category_id,  deadline, project_id)
                 VALUES (:user_id, :title, :description,:status, :priority, :category_id,  :deadline, :project_id)";
         $stmt = $this->conn->prepare($sql);
 

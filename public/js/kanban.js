@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showTaskForm(button.parentElement);
         });
     });
-
+    
     function filterTasks() {
         const searchTerm = searchBar.value.toLowerCase();
         const selectedPriority = priorityFilter.value;
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const projectId = new URLSearchParams(window.location.search).get('project_id');
             const formData = new FormData(event.target);
             formData.append('project_id', projectId);
-            formData.append('status', columnElement.getAttribute('data-priority'));
+            formData.append('status', columnElement.getAttribute('data-status'));
 
             fetch('../Controller/TaskController.php', {
                 method: 'POST',

@@ -109,11 +109,12 @@ body {
 .kanban-columns {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     gap: 20px;
 }
 
 .kanban-column {
+    align-items: start;
     background-color: var(--card-bg);
     padding: 10px;
     border-radius: 8px;

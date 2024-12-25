@@ -1,4 +1,3 @@
-
 <?php
 // Start the session and include necessary files.
 session_start();
@@ -53,7 +52,6 @@ if ($usertypes_id != 2) {
             </ul>
 
 </aside>
-
         </aside>
 
         <!-- Main Content -->
@@ -72,17 +70,17 @@ if ($usertypes_id != 2) {
             </div>
 
             <div class="kanban-columns">
-                <?php 
-                // Define columns based on priorities.
-                $priorities = ['urgent' => 'Urgent', 'high' => 'High', 'normal' => 'Normal'];
+                <?php
+                // Define columns based on statuses.
+                $statuses = ['todo' => 'To do', 'inprogress' => 'In Progress', 'finished' => 'Finished'];
 
-                foreach ($priorities as $priority_key => $priority_name) {
-                    echo "<div class='kanban-column' data-priority='$priority_key'>";
-                    echo "<h2>$priority_name</h2>";
+                foreach ($statuses as $status_key => $status_name) {
+                    echo "<div class='kanban-column' data-status='$status_key'>";
+                    echo "<h2>$status_name</h2>";
 
                     foreach ($tasks as $task) {
-                        if ($task['priority'] === $priority_key) {
-                            echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='$priority_key'>";
+                        if ($task['status'] === $status_key) {
+                            echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-status='$status_key'>";
                             echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
                             echo "<p>" . htmlspecialchars($task['description']) . "</p>";
                             echo "</div>";
@@ -113,7 +111,7 @@ if ($usertypes_id != 2) {
             <button type="button" id="task-form-cancel">Cancel</button>
         </form>
     </div>
-            <!--theme toggle-->
+        <!--theme toggle-->
     <div id="theme-toggle-container">
     <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">
     <div class="theme-selector hidden" id="theme-dropdown-container">
@@ -123,7 +121,7 @@ if ($usertypes_id != 2) {
             <li class="theme-option" data-theme="forest-theme">Green</li>
         </ul>
     </div>
-           <!--end theme toggle-->
+    <!--end theme toggle-->
 </div>
 
 

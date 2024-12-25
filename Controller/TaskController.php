@@ -63,7 +63,7 @@ class TaskController {
 
 
 
-}  
+}
 // Handle the POST request for task creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_start();
@@ -75,23 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new UserController($db);
 
     $cat = ["urgent" => 1, "high" => 2, "normal" => 3];
+    $statusOptions = ["todo" => "To do", "inprogress" => "inprogress", "finished" => "finished"];
 
     if ($_POST['priority'] === 'urgent') {
         $priorityid = $cat["urgent"];
         $namedprio = "urgent";
-    } else if ($_POST['priority'] === 'normal') {
+    } elseif ($_POST['priority'] === 'normal') {
         $priorityid = $cat["normal"];
         $namedprio = "normal";
-    } else {
+    } else{
         $priorityid = $cat["high"];
         $namedprio = "high";
     }
-
     $userId = $user->get_id($_SESSION["email"]);
-
     // Access the project_id from the POST data
     $projectId = $_POST['project_id'] ?? null;
-
     if ($projectId === null) {
         echo json_encode(['success' => false, 'message' => 'Project ID is missing.']);
         exit();
@@ -100,10 +98,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $priority = $namedprio ?? 'normal';
-    $status = $_POST['status'] ?? 'normal';
+    $status = $_POST['status'] ?? 'todo';
     $categoryId = $priorityid;
     $deadline = $_POST['deadline'] ?? null;
 
+
+    $status = $_POST['status'] ?? 'todo';
+    if (!in_array($status, ['todo', 'inprogress', 'finished'])) {
+        $status = 'todo'; // Fallback if an invalid status is provided
+    }
+    
     if (!empty($title) || $userId > 0) {
         $result = $taskController->createTask($userId, $title, $description, $status, $priority, $categoryId, $deadline, $projectId);
         echo json_encode(['success' => $result]);
