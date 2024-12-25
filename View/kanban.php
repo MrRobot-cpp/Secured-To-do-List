@@ -1,5 +1,4 @@
 <?php
-// Start the session and include necessary files.
 session_start();
 require_once '../Model/Database.php';
 require_once '../Controller/ProjectController.php';
@@ -80,7 +79,7 @@ if ($usertypes_id != 2) {
 
                     foreach ($tasks as $task) {
                         if ($task['status'] === $status_key) {
-                            echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-status='$status_key'>";
+                            echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority']) ."' data-status='$status_key'>";
                             echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
                             echo "<p>" . htmlspecialchars($task['description']) . "</p>";
                             echo "</div>";
