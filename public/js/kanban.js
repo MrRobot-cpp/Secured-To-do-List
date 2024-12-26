@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <form>
                 <input type="text" name="title" placeholder="Task Title" required>
                 <textarea name="description" placeholder="Task Description"></textarea>
+                <input type="date" name="deadline" required>
                 <select name="priority">
                     <option value="urgent">Urgent</option>
                     <option value="high">High</option>

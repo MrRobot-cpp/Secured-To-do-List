@@ -172,6 +172,7 @@ body {
 
 #task-form input[type="text"],
 #task-form textarea,
+#task-form input[type="date"],
 #task-form select {
     margin-bottom: 10px;
     padding: 10px;
