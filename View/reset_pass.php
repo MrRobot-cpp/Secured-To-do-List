@@ -1,15 +1,15 @@
 <?php
+
 session_start();
-require_once '../Model/Database.php';
-require_once '../Controller/UserController.php';
 
-$database = new Database();
-$conn = $database->getConnection();
-$controller = new UserController($conn);
-$fmessage = isset($_SESSION['fmessage']) ? $_SESSION['fmessage'] : '';
-unset($_SESSION['fmessage']);
-
+    include_once '../Controller/UserController.php';
+    require_once '../Model/Database.php';
+    // Initialize the database and controller
+    $database = new Database();
+    $conn = $database->getConnection();
+    $controller = new UserController($conn); 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,60 +23,40 @@ unset($_SESSION['fmessage']);
     <div class="container">
         <div class="form forgot-password">
             <span class="title">Forgot Password</span>
-            <form id="forgotPasswordForm" action="" method="POST">
+            <form id="forgotPasswordForm" action="../Controller/UserController.php" method="POST">
+            <input type="hidden" name="action" value="reset_pass">
                 <div class="fields">
-                    <input type="email" name="reset_email" placeholder="Email" required> 
+                    <input type="email" name="email" placeholder="Enter your email" required> 
                     <i class="fa-regular fa-envelope icon"></i>
                 </div>
-
-                <div class="fields">
-
-                    <input type="password" name="new_password" placeholder="New Password" required>
-                    <i class="fa-solid fa-lock icon"></i>
-                </div>
-
-                <div class="fields">
-
-                    <input type="password" name="confirm_password" placeholder="Confirm New Password" required>
-                    <i class="fa-solid fa-lock icon"></i>
-                </div>
-
                 <div class="fields button">
-                    <input type="submit" value="Reset Password" name="reset_password">
+                    <input type="submit" value="Send OTP">
                 </div>
             </form>
-            <?php if (!empty($fmessage)) { echo '<div id="fmessage" style="color:red;">'.$fmessage.'</div>'; } ?>
+
+            <?php if (isset($_SESSION['fmessage'])) { ?>
+                <div id="fmessage" style="color:red;">
+                    <?php echo $_SESSION['fmessage']; ?>
+                </div>
+                <?php unset($_SESSION['fmessage']); // Clear the message ?>
+            <?php } ?>
+
             <div class="login-signup">
-        <span class="text">
-            <a href="../view/login.php" class="text login-link" id="back">Back to login</a>
-        </span>
-    </div>
-   </div>
+                <span class="text">
+                    <a href="login.php" class="text login-link" id="back">Back to login</a>
+                </span>
+            </div>
         </div>
     </div>
 
-    <script src="../public/js/login.js"></script>
     <script>
-    window.addEventListener('load', function() {
-        if (performance.navigation.type === 1) {
+        // Hide the flash message when the form changes
+        document.querySelector('#forgotPasswordForm').addEventListener('input', () => {
             const messageDiv = document.getElementById('fmessage');
             if (messageDiv) {
-                messageDiv.style.display = 'none'; 
-            }
-        }
-        const formElements = document.querySelectorAll('#forgotPasswordForm input');
-    formElements.forEach(element => {
-        element.addEventListener('input', function() {
-            const messageDiv = document.getElementById('fmessage');
-            if (messageDiv) {
-                messageDiv.style.display = 'none'; 
+                messageDiv.style.display = 'none';
             }
         });
-    });
-
-    });
-    
-    
-</script>
+    </script>
 </body>
 </html>

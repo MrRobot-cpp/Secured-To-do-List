@@ -15,10 +15,73 @@ $conn = $database->getConnection();
 
 class UserController {
     private $userModel;
+    private $errorMessage = '';
 
     public function __construct($db) {
         $this->userModel = new User($db);
     }
+
+    public function handleOtpRequest() {
+        if (isset($_POST['email'])) {
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+            if ($this->userModel->emailExists($email)) { 
+                $verificationCode = $this->VerificationCode();
+                $_SESSION['verification_code'] = $verificationCode;
+    
+                if ($this->VerificationEmail($email, $verificationCode)) {
+                    $_SESSION['reset_email'] = $email;
+                    $_SESSION['message'] = "OTP sent successfully to your email.";
+                    header("Location: ../view/enterOTP.php");
+                    exit();
+                } else {
+                    $_SESSION['reset_message'] = "Failed to send OTP. Please try again.";
+                }
+            } else {
+                $_SESSION['reset_message'] = "Email does not exist in our database.";
+            }
+    
+            header("Location: ../view/reset_pass.php");
+            exit();
+        }
+    }
+
+    // Validate the OTP
+    public function validateOtp() {
+        if (isset($_POST['otp'])) {
+            $email = $_SESSION['reset_email'] ?? null;
+            $enteredOtp = htmlspecialchars($_POST['otp']);
+
+            if (isset($_SESSION['verification_code']) && $_SESSION['verification_code'] === $enteredOtp) {
+                $_SESSION['otp_valid'] = true;
+                $_SESSION['message'] = "enter a new password";
+                header("Location: ../view/new_pass.php");
+                exit();
+            } else {
+                $_SESSION['reset_message'] = "Invalid OTP. Please try again.";
+                header("Location: ../view/enterOTP.php"); 
+                exit();
+            }
+        }
+    }
+
+    // Update the password
+    public function updatePassword() {
+        if (isset($_POST['password'])) {
+            $email = $_SESSION['reset_email'] ?? null;
+            $newPassword = htmlspecialchars($_POST['password']);
+            $isUpdated = $this->userModel->updatePassword($email, $newPassword);
+
+            if ($isUpdated) {
+                $_SESSION['message'] = "Password updated successfully!";
+                unset($_SESSION['otp_valid']); 
+                header("Location: login.php"); 
+                exit();
+            } else {
+                $_SESSION['reset_message'] = "Error updating password. Please try again.";
+            }
+        }
+    }
+
     public function VerificationCode ($length=6){
         session_start();
         
@@ -83,7 +146,7 @@ class UserController {
             }
         }
     }
-    
+
     public function verify() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verification_code'])) {
@@ -169,33 +232,12 @@ return $this->userModel->get_id($email);
         return $this->userModel->getAllUsers(); // Call the new method
     }
 
-
-    public function resetPassword() {
-        session_start();
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
-            $email = filter_var($_POST['reset_email'], FILTER_SANITIZE_EMAIL); 
-            $newPassword = htmlspecialchars($_POST["new_password"]);
-            $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
-            if ($this->userModel->emailExists($email)) {
-                if ($newPassword === $confirmPassword) {
-                    if ($this->userModel->updatePassword($email, password_hash($newPassword, PASSWORD_DEFAULT))) {
-                        $_SESSION['fmessage'] = "Password reset successfully!";
-                    } else {
-                        $_SESSION['fmessage'] = "Error resetting password.";
-                    }
-                } else {
-                    $_SESSION['fmessage'] = "Passwords do not match.";
-                }
-            } else {
-                $_SESSION['fmessage'] = "Email does not exist.";
-            }
-        }
-        header("Location: ../view/reset_pass.php");
-        exit();
-    }
-
     public function getUserById($userId) {
         return $this->userModel->getUserById($userId);
+    }
+
+    public function getErrorMessage() {
+        return $this->errorMessage;
     }
 
     private function startSession($user) {
@@ -207,6 +249,7 @@ return $this->userModel->get_id($email);
     }
 }
 
+
 if ($conn) {
     $controller = new UserController($conn);
 
@@ -214,12 +257,17 @@ if ($conn) {
         $controller->login();
     } elseif (isset($_POST['signup'])) {
         $controller->signup();
-    } elseif (isset($_POST['reset_password'])) { 
-        $controller->resetPassword();
-    }
-    elseif  (isset($_POST['verify'])){
+    }  elseif  (isset($_POST['verify'])){
         $controller->verify();
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'reset_pass') {
+        $controller->handleOtpRequest();
+    } elseif (isset($_POST['otp'])) {
+        $controller->validateOtp(); 
+    } elseif (isset($_POST['password']) ) {
+        $controller->updatePassword();  
     }
 } else {
     echo "Database connection failed!";
 }
+
+?>
