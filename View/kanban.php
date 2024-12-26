@@ -82,6 +82,8 @@ if ($usertypes_id != 2) {
                             echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority']) ."' data-status='$status_key'>";
                             echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
                             echo "<p>" . htmlspecialchars($task['description']) . "</p>";
+                            echo "<button class='update-task' data-task-id='" . htmlspecialchars($task['id']) . "'>Update</button>"; 
+                            echo "<button class='delete-task' data-task-id='" . htmlspecialchars($task['id']) . "'>delete</button>"; 
                             echo "</div>";
                         }
                     }
@@ -112,6 +114,33 @@ if ($usertypes_id != 2) {
             <button type="button" id="task-form-cancel">Cancel</button>
         </form>
     </div>
+
+    <!-- delete Task Form -->
+    <form id="delete-form" action="../Controller/TaskController.php" method="POST" style="display: none;">
+        <input type="hidden" name="task_id" value="">
+        <input type="hidden" name="action" value="delete_task">
+    </form>
+    
+    <!-- Update Task Form -->
+    <form id="update-form" action="../Controller/TaskController.php" method="POST" style="display: none;">
+        <input type="text" name="title" placeholder="Task Title" required>
+        <textarea name="description" placeholder="Task Description"></textarea>
+        <input type="date" name="deadline" required>
+
+        <select name="priority">
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="normal">Normal</option>
+        </select>
+        <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+        <input type="hidden" name="project_id" value="<?php echo $_GET['project_id']; ?>" />
+        <input type="hidden" name="task_id" value="">
+        <input type="hidden" name="action" value="update_task">
+
+        <button type="submit" name="update_task">Update Task</button>
+        <button type="button" id="update-form-cancel">Cancel</button>
+    </form>
+
         <!--theme toggle-->
     <div id="theme-toggle-container">
     <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">

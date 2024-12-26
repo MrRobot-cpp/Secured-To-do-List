@@ -1,6 +1,9 @@
 <?php
 require_once '../Model/Task.php';
 require_once 'UserController.php';
+require_once '../Model/Database.php';
+
+
 
 class TaskController {
     private $taskModel;
@@ -64,10 +67,47 @@ class TaskController {
 
 
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db = (new Database())->getConnection();
+    $taskController = new TaskController($db);
+
+    if (isset($_POST['action']) && $_POST['action'] === 'update_task') {
+        $taskId = $_POST['task_id'];
+        $title = $_POST['title'];
+        $description = $_POST['description'];
+        $priority = $_POST['priority'];
+        $status = $_POST['status'];
+        $deadline = $_POST['deadline'];
+
+
+
+        if ($taskController->updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId)) {
+            header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
+            exit();
+        } else {
+            echo "Failed to update task.";
+        }
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db = (new Database())->getConnection();
+    $taskController = new TaskController($db);
+
+    if (isset($_POST['action']) && $_POST['action'] === 'delete_task') {
+        $taskId = $_POST['task_id'];
+
+        if ($taskController->deleteTask($taskId)) {
+            header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
+            exit();
+        } else {
+            echo "Failed to delete task.";
+        }
+    }
+}
 // Handle the POST request for task creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_start();
-    require_once '../Model/Database.php';
+    //require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
 
     $db = (new Database())->getConnection();
