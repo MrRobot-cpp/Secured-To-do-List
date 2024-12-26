@@ -27,14 +27,14 @@ class Task {
     }
 
     public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId) {
-        $sql = "UPDATE tasks SET 
-                title = :title, 
-                description = :description, 
-                category_id = :category_id, 
-                priority = :priority, 
-                status = :status, 
-                deadline = :deadline 
-                project_id = :project_id 
+        $sql = "UPDATE tasks SET
+                title = :title,
+                description = :description,
+                category_id = :category_id,
+                priority = :priority,
+                status = :status,
+                deadline = :deadline
+                project_id = :project_id
                 WHERE id = :taskId";
         $stmt = $this->conn->prepare($sql);
 
@@ -60,7 +60,7 @@ class Task {
     }
 
     public function getTasksByUserId($userId) {
-        $sql = "SELECT tasks.*, categories.name as category_name FROM tasks 
+        $sql = "SELECT tasks.*, categories.name as category_name FROM tasks
                 LEFT JOIN categories ON tasks.category_id = categories.id
                 WHERE user_id = :user_id 
                 ORDER BY created_at DESC";
@@ -108,7 +108,7 @@ class Task {
     }
     
     public function getTopFiveUsersByTasks() {
-        $query = "SELECT users.id, users.name, COUNT(tasks.id) as task_count 
+        $query = "SELECT users.id, users.name, COUNT(tasks.id) as task_count
                   FROM {$this->table} tasks
                   INNER JOIN users ON tasks.user_id = users.id
                   GROUP BY users.id, users.name
@@ -120,7 +120,7 @@ class Task {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getTasksByProjectId($projectId) {
-        $query = "SELECT id, title, description, category_id, priority, status, deadline, project_id 
+        $query = "SELECT id, title, description, category_id, priority, status, deadline, project_id
                   FROM tasks WHERE project_id = :project_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':project_id', $projectId);
