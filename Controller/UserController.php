@@ -203,11 +203,10 @@ class UserController {
                 exit();
             }
     
-            
             $_SESSION['temp_user'] = [
                 'name' => $fullName,
                 'email' => $email,
-                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'password' => $password,
                 'userType' => $userType
             ];
     

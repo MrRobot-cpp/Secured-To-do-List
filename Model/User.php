@@ -12,22 +12,6 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Retrieve OTP by email
-    public function getOtpByEmail($email) {
-        $query = "SELECT otp FROM  users WHERE email= :email "; 
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();  
-        return $stmt->fetch(PDO::FETCH_ASSOC); 
-    }
-
-    // Update OTP for a user
-    public function updateOtp($email, $otp) {
-        $sql = "UPDATE users SET otp = :otp WHERE email = :email";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['otp' => $otp, 'email' => $email]);
-    }
-
 
     public function verifyUser($email, $password) {
         $sql = "SELECT * FROM users WHERE email = :email";
@@ -61,17 +45,17 @@ class User {
     }
 // REGISTER
 public function registerUser($fullName, $email, $password, $usertypes_id) {
-
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT); 
     $sql = "INSERT INTO users (name, email, password, usertypes_id) VALUES (:name, :email, :password, :usertypes_id)";
     $stmt = $this->conn->prepare($sql);
     $stmt->bindParam(':name', $fullName);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $hashedPassword);
     $stmt->bindParam(':usertypes_id', $usertypes_id);
-  
+
     return $stmt->execute();
 }
+
 
     public function getUserById($userId) {
         $sql = "SELECT * FROM users WHERE id = :user_id";
