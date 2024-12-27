@@ -203,9 +203,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = 'todo'; // Fallback if an invalid status is provided
     }
     if($taskController->Deadline($deadline,$_SESSION["email"])){
-        echo json_encode(['success' => false, 'message' => 'Deadline is near']);
-        exit();
-    }
+       
+        }    
     
     if (!empty($title) || $userId > 0) {
         $result = $taskController->createTask($userId, $title, $description, $status, $priority, $categoryId, $deadline, $projectId);
