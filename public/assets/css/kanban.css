@@ -132,6 +132,7 @@ body {
 }
 
 .task {
+    align-items: center;
     background-color: var(--accent);
     color: var(--black);
     padding: 10px;
@@ -306,6 +307,18 @@ body {
 
 .add-task-btn:hover ,.update-btn:hover,.delete-btn:hover,#new-project-btn:hover{
     background-color:var(--accent-dark);
+}
+
+.update-task,.delete-task{
+    background-color: var(--card-bg);
+    color: black;
+    text-align: center;
+    
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 30%;
+    margin: 5px;
 }
 
 #project-form, #update-form {
