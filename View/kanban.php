@@ -115,12 +115,6 @@ if ($usertypes_id != 2) {
         </form>
     </div>
 
-    <!-- delete Task Form -->
-    <form id="delete-form" action="../Controller/TaskController.php" method="POST" style="display: none;">
-        <input type="hidden" name="task_id" value="">
-        <input type="hidden" name="action" value="delete_task">
-    </form>
-    
     <!-- Update Task Form -->
     <form id="update-form" action="../Controller/TaskController.php" method="POST" style="display: none;">
         <input type="text" name="title" placeholder="Task Title" required>
@@ -141,6 +135,12 @@ if ($usertypes_id != 2) {
         <button type="button" id="update-form-cancel">Cancel</button>
     </form>
 
+    <!-- Delete Task Form -->
+    <form id="delete-form" action="../Controller/TaskController.php" method="POST" style="display: none;">
+        <input type="hidden" name="task_id" value="">
+        <input type="hidden" name="action" value="delete_task">
+    </form>
+    
         <!--theme toggle-->
     <div id="theme-toggle-container">
     <img id="theme-toggle-button" src="../public/assets/img/themeLogo.png" alt="Theme Toggle">

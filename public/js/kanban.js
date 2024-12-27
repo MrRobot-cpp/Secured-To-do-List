@@ -12,48 +12,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    const updateButtons = document.querySelectorAll('.update-task');
+    const deleteButtons = document.querySelectorAll('.delete-task');
+    const taskForm = document.getElementById('task-form');
+    const updateForm = document.getElementById('update-form');
+    const deleteForm = document.getElementById('delete-form');
 
+    // Update Task
+    updateButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const taskId = this.getAttribute('data-task-id');
+            const taskTitle = this.parentElement.querySelector('h3').innerText;
+            const taskDescription = this.parentElement.querySelector('p').innerText;
+            const taskPriority = this.parentElement.getAttribute('data-priority');
+            const taskDeadline = this.parentElement.getAttribute('data-deadline');
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const updateButtons = document.querySelectorAll('.update-task');
-        const taskForm = document.getElementById('task-form');
-    const taskFormTitle = taskForm.querySelector('input[name="title"]');
-    const taskFormDescription = taskForm.querySelector('textarea[name="description"]');
-    const taskFormPriority = taskForm.querySelector('select[name="priority"]');
-    const taskFormTaskId = taskForm.querySelector('input[name="task_id"]');
-    const taskFormAction = taskForm.querySelector('input[name="action"]');
-        updateButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const taskId = this.getAttribute('data-task-id');
-                const taskTitle = this.parentElement.querySelector('h3').innerText;
-                const taskDescription = this.parentElement.querySelector('p').innerText;
-                const taskPriority = this.parentElement.getAttribute('data-priority');
-                taskFormTitle.value = taskTitle;
-                taskFormDescription.value = taskDescription;
-                taskFormPriority.value = taskPriority;
-                taskFormTaskId.value = taskId;
-                taskFormAction.value = 'update_task';
-    
-                taskForm.style.display = 'block';
-            });
+            updateForm.querySelector('input[name="task_id"]').value = taskId;
+            updateForm.querySelector('input[name="title"]').value = taskTitle;
+            updateForm.querySelector('textarea[name="description"]').value = taskDescription;
+            updateForm.querySelector('select[name="priority"]').value = taskPriority;
+            updateForm.querySelector('input[name="deadline"]').value = taskDeadline;
+
+            updateForm.style.display = 'block';
         });
     });
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.delete-task');
-        const deleteForm = document.getElementById('delete-form');
-        const deleteFormTaskId = deleteForm.querySelector('input[name="task_id"]');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const taskId = this.getAttribute('data-task-id');
-                if (confirm("Are you sure you want to delete this task?")) {
-                    deleteFormTaskId.value = taskId;
-                    deleteForm.submit();
 
-         
-        }});
+    // Delete Task
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const taskId = this.getAttribute('data-task-id');
+            if (confirm("Are you sure you want to delete this task?")) {
+                deleteForm.querySelector('input[name="task_id"]').value = taskId;
+                deleteForm.submit();
+            }
         });
     });
-    
+
+    // Hide the Update Task Form
+    document.getElementById('update-form-cancel').addEventListener('click', function() {
+        updateForm.style.display = 'none';
+    });
+
     function filterTasks() {
         const searchTerm = searchBar.value.toLowerCase();
         const selectedPriority = priorityFilter.value;
@@ -179,4 +178,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
