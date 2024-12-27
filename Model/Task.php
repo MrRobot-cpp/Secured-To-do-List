@@ -26,25 +26,24 @@ class Task {
         return $stmt->execute();
     }
 
-    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId) {
+    public function updateTask($taskId, $title, $description,  $priority,  $deadline) {
         $sql = "UPDATE tasks SET
                 title = :title,
                 description = :description,
-                category_id = :category_id,
+               
                 priority = :priority,
-                status = :status,
+                
                 deadline = :deadline
-                project_id = :project_id
                 WHERE id = :taskId";
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':category_id', $categoryId);
+       // $stmt->bindParam(':category_id', $categoryId);
         $stmt->bindParam(':priority', $priority);
-        $stmt->bindParam(':status', $status);
+       // $stmt->bindParam(':status', $status);
         $stmt->bindParam(':deadline', $deadline);
-        $stmt->bindParam(':project_id', $projectId);
+        //$stmt->bindParam(':project_id', $projectId);
         $stmt->bindParam(':taskId', $taskId);
 
         return $stmt->execute();

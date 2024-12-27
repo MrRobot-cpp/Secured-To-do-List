@@ -28,8 +28,8 @@ class TaskController {
     }
 
     // Update a task (full update)
-    public function updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId) {
-        return $this->taskModel->updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId);
+    public function updateTask($taskId, $title, $description,  $priority,  $deadline, ) {
+        return $this->taskModel->updateTask($taskId, $title, $description,  $priority,  $deadline);
     }
 
     // Delete a task
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-        if ($taskController->updateTask($taskId, $title, $description, $categoryId, $priority, $status, $deadline, $projectId)) {
+        if ($taskController->updateTask($taskId, $title, $description,  $priority,  $deadline)) {
             header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
             exit();
         } else {
