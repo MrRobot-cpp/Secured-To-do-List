@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2024 at 06:26 PM
+-- Generation Time: Dec 27, 2024 at 03:55 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -76,15 +76,7 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `name`, `user_id`) VALUES
-(1, 'Mariam', 2),
-(2, 'Mariam', 2),
-(3, 'project', 5),
-(4, 'admin', 2),
-(5, 'Mariam Shaddad', 2),
-(6, 'hjrhr', 2),
-(7, 'hjrhr', 2),
-(10, 'hjrhr', 2),
-(11, 'hjrhr', 2);
+(14, 'Shady Yassersefs', 1);
 
 -- --------------------------------------------------------
 
@@ -97,7 +89,7 @@ CREATE TABLE `tasks` (
   `user_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
-  `status` text DEFAULT 'to_do',
+  `status` text NOT NULL DEFAULT 'todo',
   `priority` text DEFAULT 'medium',
   `category_id` int(11) DEFAULT NULL,
   `deadline` date DEFAULT NULL,
@@ -111,7 +103,14 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `user_id`, `title`, `description`, `status`, `priority`, `category_id`, `deadline`, `created_at`, `updated_at`, `project_id`) VALUES
-(1, 2, 'exercise', '30 mins', 'urgent', 'high', 2, NULL, '2024-12-12 17:25:32', '2024-12-12 17:25:32', 5);
+(30, 1, 'ad', 'adas', 'finished', 'urgent', 1, '2024-12-06', '2024-12-26 12:07:58', '2024-12-26 12:07:58', 14),
+(31, 1, 'wd', 'awdawd', 'finished', 'urgent', 1, '2024-12-20', '2024-12-26 14:02:21', '2024-12-26 14:02:21', 14),
+(46, 1, 'wdawDAWD', 'EDFEasdfa', '', 'urgent', NULL, '2024-12-18', '2024-12-26 21:36:57', '2024-12-26 22:25:29', 14),
+(49, 1, 'wdawDAWD', 'EDFEasdfa', '', 'urgent', NULL, '2024-12-11', '2024-12-26 22:29:13', '2024-12-26 22:29:22', 14),
+(51, 1, 'wfsef', 'sefs', 'todo', 'urgent', 1, '2025-01-01', '2024-12-27 01:41:26', '2024-12-27 13:31:42', 14),
+(52, 1, 'awdawdaw', 'wda', 'inprogress', 'urgent', 1, '2025-01-02', '2024-12-27 13:14:35', '2024-12-27 13:33:33', 14),
+(54, 1, 'ASXASXA', 'XZSX', 'inprogress', 'normal', 3, '2025-01-02', '2024-12-27 14:39:29', '2024-12-27 14:39:29', 14),
+(55, 1, 'SHEROROROROROOR', 'ZEHAHAHAHAHAHAHAHAH', 'todo', 'urgent', 1, '2025-01-02', '2024-12-27 14:45:24', '2024-12-27 14:45:24', 14);
 
 -- --------------------------------------------------------
 
@@ -135,11 +134,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`, `usertypes_id`) VALUES
 (1, 'Shady', 'shadyyasset@gmail.com', '$2y$10$VPX5R/WSvHBmqHwrbP.oQOvux3st9xNpzgscI0fHe.sTxvQippQde', '2024-10-18 20:58:54', '2024-10-23 12:17:01', 2),
-(2, 'Shady Yasser', 'shadyaysseradel@gmail.com', '$2y$10$b085DIxWi8e5M122w3tfzu.dAZ11.wlH0SmtWZTymXyQOUa2XGGKO', '2024-10-20 11:11:40', '2024-12-12 00:13:01', 2),
-(3, 'Queen', 'ahmedsamersayed@gmail.com', '$2y$10$ZlFlrFsvWX.zZ6l7mI6laOMjMPcoxN0.U6jFBNr56RBpQGbWzPGTC', '2024-10-20 11:16:18', '2024-10-23 12:17:26', 2),
-(5, 'User ', 'User@gmail.com', '$2y$10$UjiZP/TAFUZpFY6nbQ/OyuXvrSO.OOXAR5FZoD5lvhPnS0lQI6MMi', '2024-10-23 15:41:13', '2024-12-11 23:38:42', 2),
-(6, 'Admin', 'Admin@gmail.com', '$2y$10$8RhMi9yr5NIE7cdYoWRh5uWYzwJEiK9P.ye3EQMu9qYHpd96Tifkq', '2024-10-23 15:43:54', '2024-12-11 23:40:33', 1),
-(7, 'georges Sameh', 'george@gmail.com', '$2y$10$u2ZHUCtU.GwxCqbQ0xqzMOEqaMpoOQNhFI2TPv2HMMY8Ji/C/H2K.', '2024-11-28 13:15:01', '2024-11-28 13:15:01', 2);
+(3, 'Mohamed Hani', 'midnightmusic790@gmail.com', '$2y$10$kE9KFBM8JB.Rg1lpP2AawO6fNsUOSkZuxb7C0MNDyqbeVqJqjT9KG', '2024-12-26 13:23:44', '2024-12-26 13:24:04', 1);
 
 -- --------------------------------------------------------
 
@@ -193,13 +188,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
