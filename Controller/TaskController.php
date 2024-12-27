@@ -2,6 +2,15 @@
 require_once '../Model/Task.php';
 require_once 'UserController.php';
 require_once '../Model/Database.php';
+require_once __DIR__ . '\PHPMailer-master\src\Exception.php';
+require_once __DIR__ . '\PHPMailer-master\src\PHPMailer.php';
+require_once __DIR__ . '\PHPMailer-master\src\SMTP.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 
 
@@ -36,7 +45,53 @@ class TaskController {
     public function deleteTask($taskId) {
         return $this->taskModel->deleteTask($taskId);
     }
-
+    public function Deadline($deadline,$email){
+        $deadlineDate = new DateTime($deadline);
+        $currentDate = new DateTime();
+    
+        $interval = $currentDate->diff($deadlineDate);
+        $daysRemaining = (int)$interval->format('%r%a'); 
+        if ($daysRemaining < 0) {
+            $subject = "Deadline Passed!";
+            $body = "The deadline on " . $deadlineDate->format('Y-m-d H:i:s') . " has passed.";
+        } elseif ($daysRemaining <= 1) {
+            $subject = "Deadline Approaching!";
+            $body = "The deadline is near! You have less than " . $daysRemaining . " day(s) left until " . $deadlineDate->format('Y-m-d H:i:s') . ".";
+        } else {
+            return; 
+        }
+    
+        $mail=new PHPMailer(true);
+        $miamail="wandenreich111@gmail.com";
+        $mianame="kanaban@nonreply";
+        $miapassword="azehhtmxgxtevpgc";
+        
+        try {
+            $mail->SMTPDebug=SMTP::DEBUG_OFF;
+            $mail->isSMTP();
+            $mail->Host='smtp.gmail.com';
+            $mail->SMTPAuth=true;
+            $mail->Username=$miamail;
+            $mail->Password=$miapassword;
+            $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port=587;
+        
+            $mail->setFrom($miamail,$mianame);
+            $mail->addAddress($email);
+            $mail->Subject=$subject;
+            $mail->Body=$body;
+            $mail->send();
+            return true;
+        
+        
+        } catch (Exception $e) {
+            echo"mailing error".$e->getMessage();
+       echo "error in sending the mail".$mail->ErrorInfo;
+            
+            return false;
+        }
+        
+        }
     public function getAllTasksByUser($userId) {
         return $this->taskModel->getTasksByUserId($userId);
     }
@@ -79,7 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $_POST['status'];
         $deadline = $_POST['deadline'];
 
-
+if($taskController->Deadline($deadline,$_SESSION["email"])){
+    header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
+}
 
         if ($taskController->updateTask($taskId, $title, $description,  $priority,  $deadline)) {
             header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
@@ -141,15 +198,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'] ?? 'todo';
     $categoryId = $priorityid;
     $deadline = $_POST['deadline'] ?? null;
-
-
     $status = $_POST['status'] ?? 'todo';
     if (!in_array($status, ['todo', 'inprogress', 'finished'])) {
         $status = 'todo'; // Fallback if an invalid status is provided
     }
+    if($taskController->Deadline($deadline,$_SESSION["email"])){
+        echo json_encode(['success' => false, 'message' => 'Deadline is near']);
+        exit();
+    }
     
     if (!empty($title) || $userId > 0) {
         $result = $taskController->createTask($userId, $title, $description, $status, $priority, $categoryId, $deadline, $projectId);
+
         echo json_encode(['success' => $result]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to create a task']);
