@@ -102,20 +102,21 @@ class User {
     }
 
     // Get user ID by email
-    public function get_id($email) {
+    public function get_id( $email) {
         try {
-            $encryptedEmail = $this->encryptEmail($email); 
+
             $query = "SELECT id FROM users WHERE email = :email ";
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':email', $encryptedEmail);
+            $stmt->bindParam(':email',$email);
             $stmt->execute();
 
-            return $stmt->fetch(PDO::FETCH_COLUMN);
+            return  $stmt->fetch(PDO::FETCH_COLUMN);
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+        echo "Error: " . $e->getMessage();
             return null;
         }
     }
+
 
     // Get all users
     public function getAllUsers() {
