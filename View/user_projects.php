@@ -7,6 +7,8 @@ require_once '../Controller/ProjectController.php';
 
 $db = Database::getInstance()->getConnection();
 $projectController = new ProjectController($db);
+$taskController = new TaskController($db);
+
 
 if (isset($_GET['user_id'])) {
     $userId = $_GET['user_id'];
@@ -21,6 +23,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'back') {
     header("Location: adminDashboard.php");  // Redirect to the login page
     exit();
 }
+$toDoCount = $taskController->getTaskCountByStatusPerUser('todo',$userId);
+$inProgressCount = $taskController->getTaskCountByStatusPerUser('inprogress',$userId);
+$doneCount = $taskController->getTaskCountByStatusPerUser('finished',$userId);
 ?>
 
 <!DOCTYPE html>
@@ -89,26 +94,34 @@ if (isset($_GET['action']) && $_GET['action'] == 'back') {
     </div>
             </nav>
               <!-----CARDS------>
-            <div class="row"id="Statistics">
-                <div class="container-fluid">
-                    <div class="mb-3">
-                        <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
-            <div class="user-cards-container" >
-                <?php foreach ($userProjects as $project): ?>
-                    <div class="card new-card">
-                        <div class="card-inner">
-                            <h3><?php echo htmlspecialchars($project['name']); ?></h3>
-                            <span class="material-icons-outlined">folder</span>
-                        </div>
-                        <h1><?php echo htmlspecialchars($project['description'] ?? 'No Description'); ?></h1>
-                        <div class="progress-container">
-                            <span class="progress" data-value="90"; ?>%"></span>
-                            <span class="label"> 90%</span>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+              <div class="row" id="Statistics">
+    <div class="container-fluid">
+        <div class="mb-3">
+            <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
+            <div class="user-cards-container">
+            <?php foreach ($userProjects as $project): ?>
+    <?php 
+        // Use the controller to get task counts
+        $totalTasks = $taskController->getTaskCountByProjectId($project['id']);
+        $completedTasks = $taskController->getTaskCountByStatusPerProject('finished', $project['id']);
+        $progressPercentage = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
+
+    ?>
+    <div class="card new-card">
+        <div class="card-inner">
+            <h3><?php echo htmlspecialchars($project['name']); ?></h3>
+            <span class="material-icons-outlined">folder</span>
         </div>
+        <h1 >Completed tasks</h1>
+        <div class="progress-container">
+                                  <span class="progress" data-value="<?php echo $progressPercentage?>%"></span>
+                                  <span class="label"><?php echo $progressPercentage?>%</span>
+                              </div>
+    </div>
+<?php endforeach; ?>
+
+    </div>
+</div>
    
 
                      <!-----TASKS ANALYSIS CHARTS----->
@@ -205,7 +218,7 @@ if (themeToggleButton && themeDropdownContainer) {
 //PIE CHART
  
 const pieChartOptions = {
-  series: [11, 12, 20],
+  series: [<?php echo $doneCount?>,<?php echo $inProgressCount?> , <?php echo $toDoCount?>],
   chart: {
     type: 'pie',
     background: 'transparent',

@@ -1,6 +1,7 @@
 <?php
 require_once '../Model/Task.php';
-require_once 'UserController.php';
+require_once '../Controller/UserController.php';
+require_once '../Controller/ProjectController.php';
 require_once '../Model/Database.php';
 require_once __DIR__ . '\PHPMailer-master\src\Exception.php';
 require_once __DIR__ . '\PHPMailer-master\src\PHPMailer.php';
@@ -109,19 +110,29 @@ class TaskController {
     public function getTaskCountByStatus($status) {
         return $this->taskModel->getTaskCountByStatus($status);
     }
-
+    public function getTaskCountByStatusPerUser($status,$userId) {
+        return $this->taskModel->getTaskCountByStatusPerUser($status,$userId);
+    }
+    
+    public function getTaskCountByStatusPerProject($status,$projectId) {
+        return $this->taskModel->getTaskCountByStatusPerProject($status,$projectId);
+    }
     
     public function completionPercentage($totalTasks, $completedTasks) {
         if ($totalTasks === 0) {
             return 0; // Avoid division by zero
         }
-        return ($completedTasks / $totalTasks) * 100;
+        return round(($completedTasks / $totalTasks) * 100, 2);
     }
     public function getTopFiveUsers() {
         return $this->taskModel->getTopFiveUsersByTasks();
     }
     public function getTaskCountsByUser($userId) {
         return $this->taskModel->getTaskCountsByUser($userId);
+    }
+    public function getTaskCountByProjectId($projectId) {
+        return $this->taskModel-> getTaskCountByProjectId($projectId) ;
+
     }
     public function getTasksByProjectId($projectId){
         return $this->taskModel->getTasksByProjectId($projectId);

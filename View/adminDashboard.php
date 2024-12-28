@@ -42,11 +42,14 @@ $totalTasks = count($tasks);
 $totalUsers = count($userController->getAllUsers());
 
 // Fetch task status counts.
-$toDoCount = $taskController->getTaskCountByStatus('to_do');
-$inProgressCount = $taskController->getTaskCountByStatus('in_progress');
-$doneCount = $taskController->getTaskCountByStatus('done');
+$toDoCount = $taskController->getTaskCountByStatus('todo');
+$inProgressCount = $taskController->getTaskCountByStatus('inprogress');
+$doneCount = $taskController->getTaskCountByStatus('finished');
 
 $complete=$taskController->completionPercentage($totalTasks, $doneCount);
+$inProgress=$taskController->completionPercentage($totalTasks, $inProgressCount);
+$toDo=$taskController->completionPercentage($totalTasks, $toDoCount);
+
 $topFiveUsers = $taskController->getTopFiveUsers();
 $userNames = [];
 $taskCounts = [];
@@ -160,14 +163,15 @@ foreach ($users as $userRow) {
                         <div class="main-cards" >
 
                             <div class="card">
-                              <div class="card-inner">
-                                  <h3>458</h3>
-                                  <span class="material-icons-outlined">check_circle</span>
-                                  </div>
-                              <h1>ACTIVE USERS</h1>
+                            <div class="card-inner">
+                                  <h3><?php echo $inProgressCount?></h3>
+                                  <span class="material-icons-outlined">assignment_turned_in</span>
+
+                              </div>
+                              <h1>IN PROGRESS TASKS</h1>
                               <div class="progress-container">
-                                  <span class="progress" data-value="80%"></span>
-                                  <span class="label">80%</span>
+                                  <span class="progress" data-value="<?php echo $inProgress?>%"></span>
+                                  <span class="label"><?php echo $inProgress?>%</span>
                               </div>
                           </div>
                   
@@ -185,14 +189,15 @@ foreach ($users as $userRow) {
                           </div>
                   
                           <div class="card">
-                              <div class="card-inner">
-                                  <h3>35</h3>
-                                  <span class="material-icons-outlined">highlight_off</span>
-                                  </div>
-                              <h1>INACTIVE USERS</h1>
+                          <div class="card-inner">
+                                  <h3><?php echo $toDoCount?></h3>
+                                  <span class="material-icons-outlined">assignment_turned_in</span>
+
+                              </div>
+                              <h1>TO DO TASKS</h1>
                               <div class="progress-container">
-                                  <span class="progress" data-value="90%"></span>
-                                  <span class="label">90%</span>
+                                  <span class="progress" data-value="<?php echo $toDo?>%"></span>
+                                  <span class="label"><?php echo $toDo?>%</span>
                               </div>
                           </div>
                       </div></div>
@@ -321,7 +326,7 @@ document.querySelectorAll('.progress').forEach(progress => {
 //PIE CHART
  
 const pieChartOptions = {
-  series: [11, 12, 20],
+  series: [<?php echo $doneCount?>, <?php echo $inProgressCount?>, <?php echo $toDoCount?>],
   chart: {
     type: 'pie',
     background: 'transparent',
