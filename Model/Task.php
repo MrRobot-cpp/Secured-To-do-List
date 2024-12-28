@@ -1,4 +1,5 @@
 <?php
+require_once '../Model/PriorityFactory.php';
 class Task {
     private $conn;
     private $table = 'tasks';
@@ -9,6 +10,8 @@ class Task {
 
     // Create a new task
     public function createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId) {
+        $priorityObject = PriorityFactory::createPriority($priority);
+        $priorityLevel = $priorityObject->getPriorityLevel();
         $sql = "INSERT INTO {$this->table} (user_id, title, description, status,priority, category_id,  deadline, project_id)
                 VALUES (:user_id, :title, :description,:status, :priority, :category_id,  :deadline, :project_id)";
         $stmt = $this->conn->prepare($sql);
@@ -18,7 +21,7 @@ class Task {
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':category_id', $categoryId);
         $stmt->bindParam(':status',$status);
-        $stmt->bindParam(':priority', $priority);
+        $stmt->bindParam(':priority', $priorityLevel);
         $stmt->bindParam(':deadline', $deadline);
         $stmt->bindParam(':project_id', $projectId);
 
@@ -27,6 +30,8 @@ class Task {
     }
 
     public function updateTask($taskId, $title, $description,  $priority,  $deadline) {
+        $priorityObject = PriorityFactory::createPriority($priority);
+        $priorityLevel = $priorityObject->getPriorityLevel();
         $sql = "UPDATE tasks SET
                 title = :title,
                 description = :description,
@@ -40,7 +45,7 @@ class Task {
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':description', $description);
        // $stmt->bindParam(':category_id', $categoryId);
-        $stmt->bindParam(':priority', $priority);
+        $stmt->bindParam(':priority', $priorityLevel);
        // $stmt->bindParam(':status', $status);
         $stmt->bindParam(':deadline', $deadline);
         //$stmt->bindParam(':project_id', $projectId);
