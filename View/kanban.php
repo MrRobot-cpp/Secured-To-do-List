@@ -74,12 +74,12 @@ if ($usertypes_id != 2) {
                 $statuses = ['todo' => 'To do', 'inprogress' => 'In Progress', 'finished' => 'Finished'];
 
                 foreach ($statuses as $status_key => $status_name) {
-                    echo "<div class='kanban-column' data-status='$status_key'>";
+                    echo "<div class='kanban-column' data-status='$status_key' >";
                     echo "<h2>$status_name</h2>";
 
                     foreach ($tasks as $task) {
                         if ($task['status'] === $status_key) {
-                            echo "<div draggable=true class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority'])  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
+                            echo "<div class='task' draggable='true'  data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority'])  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
                             echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
                             echo "<p>" . htmlspecialchars($task['description']) . "</p>";
                             echo "<button class='update-task' data-task-id='" . htmlspecialchars($task['id']) . "'>Update</button>"; 
