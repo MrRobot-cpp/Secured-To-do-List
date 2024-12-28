@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Create a new database connection and controllers.
-$db = (new Database())->getConnection();
+$db = Database::getInstance()->getConnection();
 $userController = new UserController($db);
 $taskController = new TaskController($db);
 $projectController = new ProjectController($db);

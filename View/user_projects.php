@@ -5,7 +5,7 @@ require_once '../Controller/TaskController.php';
 require_once '../Controller/UserController.php';
 require_once '../Controller/ProjectController.php';
 
-$db = (new Database())->getConnection();
+$db = Database::getInstance()->getConnection();
 $projectController = new ProjectController($db);
 
 if (isset($_GET['user_id'])) {

@@ -9,7 +9,7 @@ require_once '../Controller/UserController.php';
 
 
 // Create a new database connection and controllers.
-$db = (new Database())->getConnection();
+$db = Database::getInstance()->getConnection();
 $userController = new UserController($db);
 $taskController = new TaskController($db);
 

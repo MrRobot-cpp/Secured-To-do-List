@@ -131,7 +131,7 @@ class TaskController {
 
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $taskController = new TaskController($db);
 
     if (isset($_POST['action']) && $_POST['action'] === 'update_task') {
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $taskController = new TaskController($db);
 
     if (isset($_POST['action']) && $_POST['action'] === 'delete_task') {
@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
 
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $taskController = new TaskController($db);
     $user = new UserController($db);
 

@@ -3,7 +3,7 @@ session_start();
 require_once '../Model/Database.php';
 require_once '../Controller/UserController.php';
 
-$database = new Database();
+$database = Database::getInstance();
 $conn = $database->getConnection();
 $controller = new UserController($conn);
 $login_message = isset($_SESSION['login_message']) ? $_SESSION['login_message'] : '';

@@ -10,8 +10,9 @@ use PHPMailer\PHPMailer\Exception;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-$database = new Database();
+$database = Database::getInstance();
 $conn = $database->getConnection();
+$user = new User($conn);
 
 class UserController {
     private $userModel;

@@ -3,7 +3,7 @@ session_start();
 include_once '../Controller/UserController.php';
 include_once '../Model/Database.php';
 
-$database = new Database();
+$database = Database::getInstance();
 $pdo = $database->getConnection();
 $controller = new UserController($pdo);
 
