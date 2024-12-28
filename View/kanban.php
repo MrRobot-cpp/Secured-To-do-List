@@ -10,7 +10,7 @@ require_once '../Controller/UserController.php';
 
 
 // Create a new database connection and controllers.
-$db = (new Database())->getConnection();
+$db = Database::getInstance()->getConnection();
 $userController = new UserController($db);
 $taskController = new TaskController($db);
 
@@ -82,7 +82,7 @@ if ($usertypes_id != 2) {
                     foreach ($tasks as $task) {
                         if ($task['status'] === $status_key) {
 
-                            echo "<div class='task' draggable='true'  data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority'])  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
+                            echo "<div class='task'   data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority'])  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
                             $priorityObject = PriorityFactory::createPriority($task['priority']);
                             $priorityDisplay = $priorityObject->getPriorityLevel();
                             echo "<div draggable=true class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($priorityDisplay)  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";

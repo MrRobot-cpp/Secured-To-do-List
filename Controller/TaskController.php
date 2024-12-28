@@ -33,7 +33,8 @@ class TaskController {
     public function Deadline($deadline,$email){
         $deadlineDate = new DateTime($deadline);
         $currentDate = new DateTime();
-       
+
+    
     
         $interval = $currentDate->diff($deadlineDate);
         $daysRemaining = (int)$interval->format('%r%a'); 
@@ -80,6 +81,13 @@ class TaskController {
         }
     // Create a new task
     public function createTask($userId, $title, $description, $status, $priority, $categoryId,   $deadline, $projectId) {
+        $deadlineDate = new DateTime($deadline);
+        $currentDate = new DateTime();
+        
+    if ($deadlineDate < $currentDate) {
+        echo json_encode(['success' => false, 'message' => 'invalid date this deadline has already passed!.']);
+return;
+    }  
         $this->Deadline($deadline, $_SESSION['email']);
         return $this->taskModel->createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId);
 
@@ -92,6 +100,13 @@ class TaskController {
 
     // Update a task (full update)
     public function updateTask($taskId, $title, $description,  $priority,  $deadline, ) {
+        $deadlineDate = new DateTime($deadline);
+        $currentDate = new DateTime();
+        
+    if ($deadlineDate < $currentDate) {
+        echo json_encode(['success' => false, 'message' => 'invalid date this deadline has already passed!.']);
+return;
+    }  
         $this->Deadline($deadline, $_SESSION['email']);
         return $this->taskModel->updateTask($taskId, $title, $description,  $priority,  $deadline);
     }

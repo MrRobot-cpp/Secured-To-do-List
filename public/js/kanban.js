@@ -2,55 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const priorityFilter = document.getElementById('priority-filter');
     const newTaskButtons = document.querySelectorAll('.new-task');
-const draggables = document.querySelectorAll('.task');
-const droppables= document.querySelectorAll('.kanban-column');
-
-draggables.forEach((task) => {
-
-    task.addEventListener('dragstart', () => {
-        task.classList.add('is-dragging');
-    });
-
-    task.addEventListener('dragend', () => {
-        task.classList.remove('is-dragging');
-    });
-
-});
-droppables.forEach((zone) => {
-    zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const buttomTask= insertAboveTask(zone, e.clientY);
-        const curTask = document.querySelector('.is-dragging');
-         if (!buttomTask) {
-            zone.appendChild(curTask);
-            const newStatus = zone.getAttribute('data-status');
-            statusUpdateForm.querySelector('input[name="task_id"]').value = taskId;
-            statusUpdateForm.querySelector('input[name="status"]').value = newStatus;
-            statusUpdateForm.submit();
-
-        }
-        else {
-            zone.insertBefore(curTask, buttomTask);
-        }
-        
-    });
-
-
-});
-const insertAboveTask = (zone, mousey) => {
-    const task = zone.querySelectorAll(".task:not(.is-dragging)");
-    let closestTask = null;
-    let closestoffset = Number.NEGATIVE_INFINITY;
-    task.forEach((task) => {
-        const {top} = task.getBoundingClientRect();
-        const offset = mousey - top;
-        if (offset < 0 && offset > closestoffset) {
-            closestoffset = offset;
-            closestTask = task;
-        }
-    });
-    return closestTask;
-};
 
     searchBar.addEventListener('input', filterTasks);
     priorityFilter.addEventListener('change', filterTasks);
