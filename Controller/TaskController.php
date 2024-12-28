@@ -26,28 +26,13 @@ class TaskController {
         return $this->taskModel->getTasksByUserId($userId);
     }
 
-    // Create a new task
-    public function createTask($userId, $title, $description, $status, $priority, $categoryId,   $deadline, $projectId) {
-        return $this->taskModel->createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId);
-    }
 
-    // Update task status (for dragging between columns)
-    public function updateTaskStatus($taskId, $status) {
-        return $this->taskModel->updateTaskStatus($taskId, $status);
-    }
 
-    // Update a task (full update)
-    public function updateTask($taskId, $title, $description,  $priority,  $deadline, ) {
-        return $this->taskModel->updateTask($taskId, $title, $description,  $priority,  $deadline);
-    }
 
-    // Delete a task
-    public function deleteTask($taskId) {
-        return $this->taskModel->deleteTask($taskId);
-    }
     public function Deadline($deadline,$email){
         $deadlineDate = new DateTime($deadline);
         $currentDate = new DateTime();
+       
     
         $interval = $currentDate->diff($deadlineDate);
         $daysRemaining = (int)$interval->format('%r%a'); 
@@ -92,6 +77,29 @@ class TaskController {
         }
         
         }
+    // Create a new task
+    public function createTask($userId, $title, $description, $status, $priority, $categoryId,   $deadline, $projectId) {
+        $this->Deadline($deadline, $_SESSION['email']);
+        return $this->taskModel->createTask($userId, $title, $description, $status,$priority,$categoryId,  $deadline, $projectId);
+
+    }
+
+    // Update task status (for dragging between columns)
+    public function updateTaskStatus($taskId, $status) {
+        return $this->taskModel->updateTaskStatus($taskId, $status);
+    }
+
+    // Update a task (full update)
+    public function updateTask($taskId, $title, $description,  $priority,  $deadline, ) {
+        $this->Deadline($deadline, $_SESSION['email']);
+        return $this->taskModel->updateTask($taskId, $title, $description,  $priority,  $deadline);
+    }
+
+    // Delete a task
+    public function deleteTask($taskId) {
+        return $this->taskModel->deleteTask($taskId);
+    }
+   
     public function getAllTasksByUser($userId) {
         return $this->taskModel->getTasksByUserId($userId);
     }
@@ -134,9 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $_POST['status'];
         $deadline = $_POST['deadline'];
 
-if($taskController->Deadline($deadline,$_SESSION["email"])){
-    header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
-}
+
 
         if ($taskController->updateTask($taskId, $title, $description,  $priority,  $deadline)) {
             header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
@@ -202,9 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($status, ['todo', 'inprogress', 'finished'])) {
         $status = 'todo'; // Fallback if an invalid status is provided
     }
-    if($taskController->Deadline($deadline,$_SESSION["email"])){
-       
-        }    
+    
     
     if (!empty($title) || $userId > 0) {
         $result = $taskController->createTask($userId, $title, $description, $status, $priority, $categoryId, $deadline, $projectId);
