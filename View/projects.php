@@ -1,5 +1,4 @@
 <?php
-// Start the session and include necessary files.
 session_start();
 require_once '../Model/Database.php';
 require_once '../Controller/ProjectController.php';
@@ -13,16 +12,15 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Create a new database connection and controllers.
-$db = (new Database())->getConnection();
+$db = Database::getInstance()->getConnection();
 $userController = new UserController($db);
 $projectController = new ProjectController($db);
 $taskController = new TaskController($db);
-$usertypes_id = $user['usertypes_id'] ?? null;
-
 
 // Retrieve user data.
 $user = $userController->getUserById($_SESSION['user_id']);
 $name = $user['name'] ?? 'User';
+$usertypes_id = $user['usertypes_id'] ?? null;
 
 // Fetch all projects for the logged-in user.
 $projects = $projectController->getProjectsByUserId($_SESSION['user_id']);

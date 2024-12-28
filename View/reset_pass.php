@@ -5,9 +5,9 @@ session_start();
     include_once '../Controller/UserController.php';
     require_once '../Model/Database.php';
     // Initialize the database and controller
-    $database = new Database();
+    $database = Database::getInstance();
     $conn = $database->getConnection();
-    $controller = new UserController($conn); 
+    $controller = new UserController($conn);
 ?>
 
 <!DOCTYPE html>

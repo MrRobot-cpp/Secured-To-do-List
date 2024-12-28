@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_project'])) {
     require_once '../Model/Database.php';
     require_once '../Model/Project.php';
 
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $projectModel = new Project($db);
 
     $userId = $_POST['user_id'] ?? 0;
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_project'])) {
     require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
 
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $projectController = new ProjectController($db);
 
     // Get the user ID from the session and the project name from the form
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
 
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $projectController = new ProjectController($db);
     $projectId = $_POST['project_id'] ?? 0;
     $userId = $_POST['user_id'] ?? 0;
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project']) && 
     require_once '../Model/Database.php';
     require_once '../Controller/ProjectController.php';
     
-    $db = (new Database())->getConnection();
+    $db = Database::getInstance()->getConnection();
     $projectController = new ProjectController($db);
     
     $projectId = $_POST['project_id'] ?? 0;

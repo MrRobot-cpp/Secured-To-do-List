@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../Model/Database.php';
+require_once '../Model/PriorityFactory.php';
 require_once '../Controller/ProjectController.php';
 require_once '../Controller/TaskController.php';
 require_once '../Controller/UserController.php';
@@ -8,7 +9,7 @@ require_once '../Controller/UserController.php';
 
 
 // Create a new database connection and controllers.
-$db = (new Database())->getConnection();
+$db = Database::getInstance()->getConnection();
 $userController = new UserController($db);
 $taskController = new TaskController($db);
 
@@ -79,7 +80,13 @@ if ($usertypes_id != 2) {
 
                     foreach ($tasks as $task) {
                         if ($task['status'] === $status_key) {
+<<<<<<< HEAD
                             echo "<div class='task' draggable='true'  data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority'])  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
+=======
+                            $priorityObject = PriorityFactory::createPriority($task['priority']);
+                            $priorityDisplay = $priorityObject->getPriorityLevel();
+                            echo "<div draggable=true class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($priorityDisplay)  . "' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
+>>>>>>> 78ca8f045022b85223d70200f18fc490587b7607
                             echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
                             echo "<p>" . htmlspecialchars($task['description']) . "</p>";
                             echo "<button class='update-task' data-task-id='" . htmlspecialchars($task['id']) . "'>Update</button>"; 
