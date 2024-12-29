@@ -8,10 +8,12 @@ require_once '../Controller/ProjectController.php';
 $db = Database::getInstance()->getConnection();
 $projectController = new ProjectController($db);
 $taskController = new TaskController($db);
+$userController = new UserController($db);
 
 
 if (isset($_GET['user_id'])) {
     $userId = $_GET['user_id'];
+    $user=$userController->getUserById($userId);
     $userProjects = $projectController->getProjectsByUserId($userId);
 } else {
     echo "User ID not provided!";
@@ -97,7 +99,7 @@ $doneCount = $taskController->getTaskCountByStatusPerUser('finished',$userId);
               <div class="row" id="Statistics">
     <div class="container-fluid">
         <div class="mb-3">
-            <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
+            <h3 class="fw-bold fs-4 mb-3"><?php echo $user['name']?> Dashboard</h3>
             <div class="user-cards-container">
             <?php foreach ($userProjects as $project): ?>
     <?php 

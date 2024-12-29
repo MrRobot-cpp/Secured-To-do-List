@@ -255,6 +255,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //         exit();
 //     }
 // }
+//handle drag and drop
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (isset($data['action']) && $data['action'] === 'update_task_status') {
+        $taskId = intval($data['task_id']);
+        $newStatus = htmlspecialchars($data['status']);
+
+        $taskModel = new Task($db);
+        $result = $taskModel->updateTaskStatus($taskId, $newStatus);
+
+        echo json_encode(['success' => $result]);
+        exit();
+    }
+}
 
 
 // Handle the POST request for task creation

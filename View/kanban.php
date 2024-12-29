@@ -61,41 +61,41 @@ if ($usertypes_id != 2) {
                     <label for="priority-filter">Priority:</label>
                     <select id="priority-filter">
                         <option value="all">All</option>
-                        <option value="urgent">Urgent</option>
-                        <option value="high">High</option>
-                        <option value="normal">Normal</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="High">High</option>
+                        <option value="Normal">Normal</option>
                     </select>
                 </div>
             </div>
 
             <div class="kanban-columns">
-                <?php
-                // Define columns based on statuses.
-                $statuses = ['todo' => 'To do', 'inprogress' => 'In Progress', 'finished' => 'Finished'];
+    <?php
+    $statuses = ['todo' => 'To do', 'inprogress' => 'In Progress', 'finished' => 'Finished'];
 
-                foreach ($statuses as $status_key => $status_name) {
-                    echo "<div class='kanban-column' data-status='$status_key'>";
-                    echo "<h2>$status_name</h2>";
+    foreach ($statuses as $status_key => $status_name) {
+        echo "<div class='kanban-column' data-status='$status_key' ondrop='handleDrop(event)' ondragover='allowDrop(event)'>";
+        echo "<h2>$status_name</h2>";
 
-                    foreach ($tasks as $task) {
-                        if ($task['status'] === $status_key) {
-                            echo "<div class='task' data-title='".htmlspecialchars($task['title'])."' data-priority='" . htmlspecialchars($task['priority']) ."' data-status='$status_key' data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
-                          
-                            if ($status_key !== 'finished') {
-                                echo "<input type='checkbox' class='mark-as-finished' data-task-id='" . htmlspecialchars($task['id']) . "'>";
-                            }
-                            echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
-                            echo "<p>" . htmlspecialchars($task['description']) . "</p>";
-                            echo "<button class='update-task' data-task-id='" . htmlspecialchars($task['id']) . "'>Update</button>"; 
-                            echo "<button class='delete-task' data-task-id='" . htmlspecialchars($task['id']) . "'>delete</button>"; 
-                            echo "</div>";
-                        }
-                    }
-                    echo "<div class='new-task'>+ New Task</div>";
-                    echo "</div>";
-                }
-                ?>
-            </div>
+        foreach ($tasks as $task) {
+            if ($task['status'] === $status_key) {
+                echo "<div class='task' draggable='true' ondragstart='handleDragStart(event)' 
+                      data-task-id='" . htmlspecialchars($task['id']) . "' 
+                      data-title='" . htmlspecialchars($task['title']) . "' 
+                      data-priority='" . htmlspecialchars($task['priority']) . "' 
+                      data-status='$status_key' 
+                      data-deadline='" . htmlspecialchars($task['deadline']) . "'>";
+                echo "<h3>" . htmlspecialchars($task['title']) . "</h3>";
+                echo "<p>" . htmlspecialchars($task['description']) . "</p>";
+                echo "<button class='update-task' data-task-id='" . htmlspecialchars($task['id']) . "'>Update</button>";
+                echo "<button class='delete-task' data-task-id='" . htmlspecialchars($task['id']) . "'>Delete</button>";
+                echo "</div>";
+            }
+        }
+        echo "<div class='new-task'>+ New Task</div>";
+        echo "</div>";
+    }
+    ?>
+
         </main>
     </div>
 
@@ -107,9 +107,9 @@ if ($usertypes_id != 2) {
             <input type="date" name="deadline" required>
 
             <select name="priority">
-                <option value="urgent">Urgent</option>
-                <option value="high">High</option>
-                <option value="normal">Normal</option>
+                <option value="Urgent">Urgent</option>
+                <option value="High">High</option>
+                <option value="Normal">Normal</option>
             </select>
             <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
             <input type="hidden" name="project_id" value="<?php echo $_GET['project_id']; ?>" />
@@ -126,9 +126,9 @@ if ($usertypes_id != 2) {
         <input type="date" name="deadline" required>
 
         <select name="priority">
-            <option value="urgent">Urgent</option>
-            <option value="high">High</option>
-            <option value="normal">Normal</option>
+            <option value="Urgent">Urgent</option>
+            <option value="High">High</option>
+            <option value="Normal">Normal</option>
         </select>
         <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
         <input type="hidden" name="project_id" value="<?php echo $_GET['project_id']; ?>" />

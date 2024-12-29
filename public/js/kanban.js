@@ -127,9 +127,9 @@ function updateTaskStatus(taskId, newStatus) {
                 <textarea name="description" placeholder="Task Description"></textarea>
                 <input type="date" name="deadline" required>
                 <select name="priority">
-                    <option value="urgent">Urgent</option>
-                    <option value="high">High</option>
-                    <option value="normal">Normal</option>
+                    <option value="Urgent">Urgent</option>
+                    <option value="High">High</option>
+                    <option value="Normal">Normal</option>
                 </select>
                 <button type="submit">Add Task</button>
                 <button type="button" class="cancel-btn">Cancel</button>
@@ -223,3 +223,66 @@ function updateTaskStatus(taskId, newStatus) {
         });
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+    let draggedTask = null;
+
+    // Allow the drop operation
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    // Capture the dragged task
+    function handleDragStart(event) {
+        draggedTask = event.target;
+        event.dataTransfer.setData("text/plain", event.target.dataset.taskId);
+    }
+
+    async function handleDrop(event) {
+        event.preventDefault();
+    
+        // Ensure the drop is on a column
+        const column = event.target.closest(".kanban-column");
+        if (!column) return;
+    
+        const newStatus = column.dataset.status;
+        const taskId = draggedTask.dataset.taskId;
+    
+        if (draggedTask && newStatus) {
+            // Move the task visually to the top of the column
+            const firstChild = column.querySelector(".task, .new-task");
+            if (firstChild) {
+                column.insertBefore(draggedTask, firstChild);
+            } else {
+                column.appendChild(draggedTask);
+            }
+    
+            // Update the task status in the server
+            try {
+                const response = await fetch("../Controller/TaskController.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        action: "update_task_status",
+                        task_id: taskId,
+                        status: newStatus,
+                    }),
+                });
+    
+                const result = await response.json();
+                if (!result.success) {
+                    alert("Failed to update task status");
+                }
+            } catch (error) {
+                console.error("Error updating task status:", error);
+            }
+        }
+    }
+    
+    // Expose the functions globally
+    window.allowDrop = allowDrop;
+    window.handleDragStart = handleDragStart;
+    window.handleDrop = handleDrop;
+});
+
