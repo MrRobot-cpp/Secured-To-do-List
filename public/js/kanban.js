@@ -2,6 +2,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const priorityFilter = document.getElementById('priority-filter');
     const newTaskButtons = document.querySelectorAll('.new-task');
+    const checkboxes = document.querySelectorAll(".mark-as-finished");
+
+//cheching the checkbox of finished tasks
+checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+        if (this.checked) {
+            const taskId = this.getAttribute("data-task-id");
+
+            // Move the task to the "Finished" column
+            const taskElement = this.closest(".task");
+            const finishedColumn = document.querySelector(".kanban-column[data-status='finished']");
+            finishedColumn.appendChild(taskElement);
+
+            // Remove the checkbox after moving
+            this.remove();
+
+            // Update the status in the database
+            updateTaskStatus(taskId, "finished");
+        }
+    });
+});
+function updateTaskStatus(taskId, newStatus) {
+    fetch("../Controller/TaskController.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            action: "update_task_status",
+            task_id: taskId,
+            status: newStatus,
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                console.log("Task status updated successfully.");
+            } else {
+                console.error("Failed to update task status:", data.message);
+            }
+        })
+        .catch((error) => {
+            console.error("Error updating task status:", error);
+        });
+    }
 
     searchBar.addEventListener('input', filterTasks);
     priorityFilter.addEventListener('change', filterTasks);

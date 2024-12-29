@@ -147,7 +147,11 @@ class UserController {
             }
         }
     }
+public function decryptEmail($email){
 
+
+    return $this->userModel->getdecryptEmail($email);
+} 
     public function verify() {
         session_start();
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verification_code'])) {

@@ -20,6 +20,11 @@ class User {
         return openssl_decrypt($encryptedEmail, $this->ciphering, $this->encryptionKey, $this->options, $this->encryptionIv);
     }
 
+public function getdecryptEmail($encryptedEmail) {
+        return $this->decryptEmail($encryptedEmail);
+    }
+
+
     // Get user by email
     public function getUserByEmail($email) {
         $encryptedEmail = $this->encryptEmail($email); 
