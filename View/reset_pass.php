@@ -34,12 +34,11 @@ session_start();
                 </div>
             </form>
 
-            <?php if (isset($_SESSION['fmessage'])) { ?>
-                <div id="fmessage" style="color:red;">
-                    <?php echo $_SESSION['fmessage']; ?>
-                </div>
-                <?php unset($_SESSION['fmessage']); // Clear the message ?>
-            <?php } ?>
+            <?php
+                    if (isset($_SESSION['forget_message'])) {
+                        echo '<div class="error-message">' . $_SESSION['forget_message'] . '</div>';
+                        unset($_SESSION['forget_message']);
+                    } ?>
 
             <div class="login-signup">
                 <span class="text">
@@ -49,14 +48,5 @@ session_start();
         </div>
     </div>
 
-    <script>
-        // Hide the flash message when the form changes
-        document.querySelector('#forgotPasswordForm').addEventListener('input', () => {
-            const messageDiv = document.getElementById('fmessage');
-            if (messageDiv) {
-                messageDiv.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>

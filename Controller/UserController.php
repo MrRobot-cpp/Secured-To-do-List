@@ -23,12 +23,11 @@ class UserController {
     }
 
     public function handleOtpRequest() {
+        session_start();
         if (isset($_POST['email'])) {
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             if ($this->userModel->emailExists($email)) { 
-                $verificationCode = $this->VerificationCode();
-                $_SESSION['verification_code'] = $verificationCode;
-    
+                $verificationCode = $this->VerificationCode();    
                 if ($this->VerificationEmail($email, $verificationCode)) {
                     $_SESSION['reset_email'] = $email;
                     $_SESSION['message'] = "OTP sent successfully to your email.";
@@ -38,9 +37,8 @@ class UserController {
                     $_SESSION['reset_message'] = "Failed to send OTP. Please try again.";
                 }
             } else {
-                $_SESSION['reset_message'] = "Email does not exist in our database.";
+                $_SESSION['forget_message'] = "Email does not exist in our database.";
             }
-    
             header("Location: ../view/reset_pass.php");
             exit();
         }
@@ -49,10 +47,8 @@ class UserController {
     // Validate the OTP
     public function validateOtp() {
         if (isset($_POST['otp'])) {
-            $email = $_SESSION['reset_email'] ?? null;
             $enteredOtp = htmlspecialchars($_POST['otp']);
-
-            if (isset($_SESSION['verification_code']) && $_SESSION['verification_code'] === $enteredOtp) {
+            if (isset($_SESSION['verification']) && $_SESSION['verification'] === $enteredOtp) {
                 $_SESSION['otp_valid'] = true;
                 $_SESSION['message'] = "enter a new password";
                 header("Location: ../view/new_pass.php");
@@ -64,6 +60,7 @@ class UserController {
             }
         }
     }
+
 
     // Update the password
     public function updatePassword() {
@@ -82,6 +79,7 @@ class UserController {
             }
         }
     }
+
 
     public function VerificationCode ($length=6){
         session_start();

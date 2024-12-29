@@ -41,10 +41,7 @@ unset($_SESSION['signup_message']);
     </div>
 
     <div class="checkbox-field">
-        <div class="checkbox-content">
-            <input type="checkbox" id="logCheck">
-            <label for="logCheck" class="text">Remember me</label>
-        </div>
+
 
         <a href="reset_pass.php" class="text">Forgot password?</a>
     </div>

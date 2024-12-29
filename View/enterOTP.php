@@ -7,9 +7,6 @@ $database = Database::getInstance();
 $pdo = $database->getConnection();
 $controller = new UserController($pdo);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otp'])) {
-    $controller->validateOtp();
-}
 ?>
 
 <!DOCTYPE html>

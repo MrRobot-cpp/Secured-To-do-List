@@ -7,9 +7,6 @@ $database = Database::getInstance();
 $pdo = $database->getConnection();
 $controller = new UserController($pdo);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['password'])) {
-    $controller->updatePassword();  // Assuming you have a method to handle the password update
-}
 ?>
 
 <!DOCTYPE html>
@@ -22,15 +19,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['password'])) {
     <script>
         function validatePasswordForm() {
             var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
             var passwordErrorMessage = document.getElementById('passwordErrorMessage');
+            var confirmPasswordErrorMessage = document.getElementById('confirmPasswordErrorMessage');
             
-            if (password.length < 6) {
-                passwordErrorMessage.textContent = 'Password must be at least 6 characters long';
+
+            if (password.length < 4) {
+                passwordErrorMessage.textContent = 'Password must be at least 4 characters long';
                 passwordErrorMessage.style.display = 'block';
                 return false;
             } else {
                 passwordErrorMessage.style.display = 'none';
             }
+
+
+            if (password !== confirmPassword) {
+                confirmPasswordErrorMessage.textContent = 'Passwords do not match';
+                confirmPasswordErrorMessage.style.display = 'block';
+                return false;
+            } else {
+                confirmPasswordErrorMessage.style.display = 'none';
+            }
+
             return true;
         }
     </script>
@@ -51,20 +61,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['password'])) {
                         unset($_SESSION['reset_message']);
                     }
 
-                    // Show new password field if OTP was validated
                     if (isset($_SESSION['otp_valid'])) {
                         echo '
                         <div class="fields">
                             <input type="password" name="password" id="password" placeholder="Enter new password" required>
                         </div>
-                        <div id="passwordErrorMessage" class="error-message" style="display:none;"></div>';
+                        <div id="passwordErrorMessage" class="error-message" style="display:none;"></div>
+                        
+                        <div class="fields">
+                            <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm new password" required>
+                        </div>
+                        <div id="confirmPasswordErrorMessage" class="error-message" style="display:none;"></div>';
                     } else {
                         echo '<div class="error-message">Session expired or invalid OTP. Please try again.</div>';
                     }
                     ?>
                 </div>
                 <div class="fields button">
-                    <input type="submit" value="Submit ">
+                    <input type="submit" value="Submit">
                 </div>
             </form>
         </div>
