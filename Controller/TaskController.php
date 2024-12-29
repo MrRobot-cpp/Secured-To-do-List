@@ -270,6 +270,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
+//handle task deletion 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    if (isset($input['action']) && $input['action'] === 'delete_task') {
+        $taskId = $input['task_id'];
+
+        $result = $taskController->deleteTask($taskId);
+
+        if ($result) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Task could not be deleted.']);
+        }
+        exit();
+    }
+}
 
 
 // Handle the POST request for task creation

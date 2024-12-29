@@ -87,11 +87,33 @@ function updateTaskStatus(taskId, newStatus) {
         button.addEventListener('click', function() {
             const taskId = this.getAttribute('data-task-id');
             if (confirm("Are you sure you want to delete this task?")) {
-                deleteForm.querySelector('input[name="task_id"]').value = taskId;
-                deleteForm.submit();
+                fetch('../Controller/TaskController.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'delete_task',
+                        task_id: taskId,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the task element from the DOM
+                        const taskElement = this.closest('.task');
+                        taskElement.remove();
+                    } else {
+                        alert('Failed to delete the task: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting the task:', error);
+                });
             }
         });
     });
+    
 
     // Hide the Update Task Form
     document.getElementById('update-form-cancel').addEventListener('click', function() {
