@@ -153,10 +153,6 @@ return;
     public function getTasksByProjectId($projectId){
         return $this->taskModel->getTasksByProjectId($projectId);
     }
-
-    public function getRequestData() {
-        return $_POST;
-    }
     
     
 }
