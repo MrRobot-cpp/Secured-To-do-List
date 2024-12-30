@@ -23,7 +23,7 @@ class UserTest extends TestCase {
 
     public function testRegisterUser() {
         $fullName = "Test User";
-        $email = "testuser@example.com";
+        $email = "testuser@gmail.com";
         $password = "password123";
         $usertypes_id = 2;
 
@@ -32,14 +32,14 @@ class UserTest extends TestCase {
     }
 
     public function testGetUserByEmail() {
-        $email = "testuser@example.com";
+        $email = "testuser@gmail.com";
         $user = $this->user->getUserByEmail($email);
         $this->assertIsArray($user);
         $this->assertEquals($email, $this->user->getdecryptEmail($user['email']));
     }
 
     public function testVerifyUser() {
-        $email = "testuser@example.com";
+        $email = "testuser@gmail.com";
         $password = "password123";
         $user = $this->user->verifyUser($email, $password);
         $this->assertIsArray($user);
@@ -52,7 +52,7 @@ class UserTest extends TestCase {
     }
 
     public function testEmailExists() {
-        $email = "testuser@example.com";
+        $email = "testuser@gmail.com";
         $exists = $this->user->emailExists($email);
         $this->assertTrue($exists);
     }
@@ -65,7 +65,7 @@ class UserTest extends TestCase {
     }
 
     public function testUpdatePassword() {
-        $email = "testuser@example.com";
+        $email = "testuser@gmail.com";
         $newPassword = "newpassword123";
         $result = $this->user->updatePassword($email, $newPassword);
         $this->assertTrue($result);
