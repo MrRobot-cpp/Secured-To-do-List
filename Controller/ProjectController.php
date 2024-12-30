@@ -1,7 +1,6 @@
-
 <?php
-require_once '../Model/Project.php';
-require_once 'UserController.php';
+require_once __DIR__ . '/../Model/Project.php';
+require_once __DIR__ . '/UserController.php';
 
 class ProjectController {
     private $projectModel;
@@ -39,23 +38,25 @@ class ProjectController {
     public function getTaskCountByProject($projectId) {
         return $this->projectModel->getTaskCountByProject($projectId);
     }
+
     public function getProjectById($projectId) {
         return $this->projectModel->getProjectById($projectId);
     }
+
     public function getProjectsByUserId($userId) {
         return $this->projectModel->getProjectsByUserId($userId);
     }
 
-public function searchProjects($userId, $searchTerm) {
-    return $this->projectModel->searchProjects($userId, $searchTerm);
-}
-public function countProjectsByUserId($userId){
-    return $this->projectModel-> countProjectsByUserId($userId);
+    public function searchProjects($userId, $searchTerm) {
+        return $this->projectModel->searchProjects($userId, $searchTerm);
+    }
+
+    public function countProjectsByUserId($userId) {
+        return $this->projectModel->countProjectsByUserId($userId);
+    }
 }
 
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_project'])) {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_project'])) {
     session_start();
     require_once '../Model/Database.php';
     require_once '../Model/Project.php';
@@ -67,15 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_project'])) {
     $searchTerm = $_POST['search_term'] ?? '';
 
     if (!empty($searchTerm) && $userId > 0) {
-            $searchResults = $projectModel->searchProjects($userId, $searchTerm);
-            echo json_encode($searchResults); 
+        $searchResults = $projectModel->searchProjects($userId, $searchTerm);
+        echo json_encode($searchResults);
     }
     exit();
 }
 
-
 // Handle the POST request for adding a new project
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_project'])) {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_project'])) {
     session_start();
     require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_project'])) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     session_start();
     require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
@@ -114,32 +114,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     if (!empty($name) && $userId > 0 && $projectId > 0) {
         $result = $projectController->updateProject($projectId, $name);
         if ($result) {
-            header("Location: ../view/kanban.php"); 
+            header("Location: ../view/kanban.php");
             exit();
         } else {
             echo "Failed to update project. Please try again.";
         }
     }
 }
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project']) && isset($_POST['project_id'])) {
+
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_project']) && isset($_POST['project_id'])) {
     session_start();
     require_once '../Model/Database.php';
     require_once '../Controller/ProjectController.php';
-    
+
     $db = Database::getInstance()->getConnection();
     $projectController = new ProjectController($db);
-    
+
     $projectId = $_POST['project_id'] ?? 0;
-    
+
     if ($projectId > 0) {
         $result = $projectController->deleteProject($projectId);
-        
+
         if ($result) {
-            echo 'success'; 
+            echo 'success';
         } else {
-            echo 'failure'; 
+            echo 'failure';
         }
     } else {
-        echo 'failure'; 
+        echo 'failure';
     }
 }
+?>

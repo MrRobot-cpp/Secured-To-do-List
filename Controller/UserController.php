@@ -1,6 +1,6 @@
 <?php
-require_once '../Model/Database.php';
-require_once '../Model/User.php';
+require_once __DIR__ .'/../Model/Database.php';
+require_once __DIR__ . '/../Model/User.php';
 require_once __DIR__ . '\PHPMailer-master\src\Exception.php';
 require_once __DIR__ . '\PHPMailer-master\src\PHPMailer.php';
 require_once __DIR__ . '\PHPMailer-master\src\SMTP.php';

@@ -1,8 +1,7 @@
 <?php
-
-require_once '../Model/UrgentPriority.php';
-require_once '../Model/NormalPriority.php';
-require_once '../Model/HighPriority.php';
+require_once __DIR__ . '/UrgentPriority.php';
+require_once __DIR__ . '/NormalPriority.php';
+require_once __DIR__ . '/HighPriority.php';
 
 class PriorityFactory {
     public static function createPriority($priority) {

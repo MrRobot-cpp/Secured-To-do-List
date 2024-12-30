@@ -1,6 +1,6 @@
 <?php
 
-require_once '../Model/PriorityInterface.php';
+require_once __DIR__ . '/PriorityInterface.php';
 
 class UrgentPriority implements PriorityInterface {
     public function getPriorityLevel() {

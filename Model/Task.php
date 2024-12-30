@@ -1,5 +1,5 @@
 <?php
-require_once '../Model/PriorityFactory.php';
+require_once __DIR__ . '/PriorityFactory.php';
 class Task {
     private $conn;
     private $table = 'tasks';
