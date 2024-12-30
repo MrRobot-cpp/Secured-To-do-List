@@ -1,8 +1,8 @@
 <?php
-require_once '../Model/Task.php';
-require_once '../Controller/UserController.php';
-require_once '../Controller/ProjectController.php';
-require_once '../Model/Database.php';
+require_once __DIR__ .'/../Model/Task.php';
+require_once __DIR__ .'/UserController.php';
+require_once __DIR__ .'/ProjectController.php';
+require_once __DIR__ .'/../Model/Database.php';
 require_once __DIR__ . '\PHPMailer-master\src\Exception.php';
 require_once __DIR__ . '\PHPMailer-master\src\PHPMailer.php';
 require_once __DIR__ . '\PHPMailer-master\src\SMTP.php';
@@ -12,7 +12,6 @@ use PHPMailer\PHPMailer\Exception;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 
 
 class TaskController {
