@@ -154,14 +154,18 @@ return;
         return $this->taskModel->getTasksByProjectId($projectId);
     }
 
-
-
+    public function getRequestData() {
+        return $_POST;
+    }
+    
+    
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance()->getConnection();
     $taskController = new TaskController($db);
-
+    
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'update_task':
@@ -171,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $priority = $_POST['priority'];
                 $status = $_POST['status'];
                 $deadline = $_POST['deadline'];
-
+                
                 if ($taskController->updateTask($taskId, $title, $description,  $priority,  $deadline)) {
                     header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
                     exit();
@@ -179,92 +183,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo "Failed to update task.";
                 }
                 break;
-
-            case 'delete_task':
-                $taskId = $_POST['task_id'];
-
-                if ($taskController->deleteTask($taskId)) {
+                
+                case 'delete_task':
+                    $taskId = $_POST['task_id'];
+                    
+                    if ($taskController->deleteTask($taskId)) {
                     header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
                     exit();
                 } else {
                     echo "Failed to delete task.";
                 }
                 break;
-
-            case 'update_task_status':
-                $taskId = intval($_POST['task_id']);
-                $newStatus = $_POST['status'];
-
-                // Update task status in the database
-                $success = $taskController->updateTaskStatus($taskId, $newStatus);
-
-                echo json_encode(['success' => $success]);
-                exit();
+                
+                case 'update_task_status':
+                    $taskId = intval($_POST['task_id']);
+                    $newStatus = $_POST['status'];
+                    
+                    // Update task status in the database
+                    $success = $taskController->updateTaskStatus($taskId, $newStatus);
+                    
+                    echo json_encode(['success' => $success]);
+                    exit();
         }
     }
 }
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $db = Database::getInstance()->getConnection();
-//     $taskController = new TaskController($db);
-
-//     if (isset($_POST['action']) && $_POST['action'] === 'update_task') {
-//         $taskId = $_POST['task_id'];
-//         $title = $_POST['title'];
-//         $description = $_POST['description'];
-//         $priority = $_POST['priority'];
-//         $status = $_POST['status'];
-//         $deadline = $_POST['deadline'];
-
-
-
-//         if ($taskController->updateTask($taskId, $title, $description,  $priority,  $deadline)) {
-//             header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
-//             exit();
-//         } else {
-//             echo "Failed to update task.";
-//         }
-//     }
-// }
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $db = Database::getInstance()->getConnection();
-//     $taskController = new TaskController($db);
-
-//     if (isset($_POST['action']) && $_POST['action'] === 'delete_task') {
-//         $taskId = $_POST['task_id'];
-
-//         if ($taskController->deleteTask($taskId)) {
-//             header("Location: ../View/kanban.php?project_id=" . $_POST['project_id']);
-//             exit();
-//         } else {
-//             echo "Failed to delete task.";
-//         }
-//     }
-// }
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $db = Database::getInstance()->getConnection();
-
-//     if (isset($_POST['action']) && $_POST['action'] === 'update_task_status') {
-//         $taskId = intval($_POST['task_id']);
-//         $newStatus = $_POST['status'];
-
-//         // Update task status in the database
-//         $success = $taskController->updateTaskStatus($taskId, $newStatus);
-
-//         echo json_encode(['success' => $success]);
-//         exit();
-//     }
-// }
 //handle drag and drop
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-
+    
     if (isset($data['action']) && $data['action'] === 'update_task_status') {
         $taskId = intval($data['task_id']);
         $newStatus = htmlspecialchars($data['status']);
-
+        
         $taskModel = new Task($db);
         $result = $taskModel->updateTaskStatus($taskId, $newStatus);
-
+        
         echo json_encode(['success' => $result]);
         exit();
     }
@@ -272,12 +225,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //handle task deletion 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
-
+    
     if (isset($input['action']) && $input['action'] === 'delete_task') {
         $taskId = $input['task_id'];
-
+        
         $result = $taskController->deleteTask($taskId);
-
+        
         if ($result) {
             echo json_encode(['success' => true]);
         } else {
@@ -293,14 +246,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_start();
     //require_once '../Model/Database.php';
     require_once '../Controller/UserController.php';
-
+    
     $db = Database::getInstance()->getConnection();
     $taskController = new TaskController($db);
     $user = new UserController($db);
-
+    
     $cat = ["urgent" => 1, "high" => 2, "normal" => 3];
     $statusOptions = ["todo" => "To do", "inprogress" => "inprogress", "finished" => "finished"];
-
+    
     if ($_POST['priority'] === 'urgent') {
         $priorityid = $cat["urgent"];
         $namedprio = "urgent";
@@ -318,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Project ID is missing.']);
         exit();
     }
-
+    
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $priority = $namedprio ?? 'normal';
@@ -333,10 +286,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (!empty($title) || $userId > 0) {
         $result = $taskController->createTask($userId, $title, $description, $status, $priority, $categoryId, $deadline, $projectId);
-
+        
         echo json_encode(['success' => $result]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to create a task']);
     }
-    exit();
+        exit();
 }
