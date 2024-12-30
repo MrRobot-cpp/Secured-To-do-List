@@ -16,17 +16,17 @@ class TaskTest extends TestCase {
     }
 
     public function testCreateTask() {
-        $result = $this->task->createTask(1, 'Test Task', 'This is a test task', 'to_do', 'high', 1, '2023-12-31', 1);
+        $result = $this->task->createTask(4, 'Test Task', 'This is a test task', 'to_do', 'high', 1, '2024-12-31', 17);
         $this->assertTrue($result);
     }
 
     public function testUpdateTask() {
-        $result = $this->task->updateTask(1, 'Updated Task', 'This is an updated test task', 'medium', '2023-12-31');
+        $result = $this->task->updateTask(60, 'Updated Task', 'This is an updated test task', 'urgent', '2024-12-31');
         $this->assertTrue($result);
     }
 
     public function testUpdateTaskStatus() {
-        $result = $this->task->updateTaskStatus(1, 'done');
+        $result = $this->task->updateTaskStatus(60, 'finished');
         $this->assertTrue($result);
     }
 
